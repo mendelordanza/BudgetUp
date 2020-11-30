@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemWalletBinding
 import com.ralphordanza.budgetup.models.Wallet
 
-class WalletAdapter(private val walletList: MutableList<Wallet>) : RecyclerView.Adapter<WalletAdapter.ViewHolder>(){
+class WalletAdapter(
+    private val walletList: MutableList<Wallet>,
+    private val onClick: (wallet: Wallet) -> Unit
+) : RecyclerView.Adapter<WalletAdapter.ViewHolder>() {
     private lateinit var binding: ItemWalletBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WalletAdapter.ViewHolder {
@@ -21,16 +24,20 @@ class WalletAdapter(private val walletList: MutableList<Wallet>) : RecyclerView.
         holder.bind(wallet)
     }
 
-    fun updateList(newList: MutableList<Wallet>){
+    fun updateList(newList: MutableList<Wallet>) {
         walletList.clear()
         walletList.addAll(newList)
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(private val binding: ItemWalletBinding) : RecyclerView.ViewHolder(binding.root){
-        fun bind(wallet: Wallet){
+    inner class ViewHolder(private val binding: ItemWalletBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(wallet: Wallet) {
             binding.txtName.text = wallet.name
             binding.txtAmount.text = wallet.amount
+            binding.root.setOnClickListener {
+                onClick(wallet)
+            }
         }
     }
 
