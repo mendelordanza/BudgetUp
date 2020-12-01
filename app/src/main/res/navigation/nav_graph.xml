@@ -16,6 +16,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_addWalletFragment"
+            app:destination="@id/addWalletFragment" />
     </fragment>
     <fragment
         android:id="@+id/transactionsFragment"
@@ -25,5 +28,18 @@
         <argument
             android:name="walletData"
             app:argType="com.ralphordanza.budgetup.models.Wallet" />
+        <action
+            android:id="@+id/action_transactionsFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/addWalletFragment"
+        android:name="com.ralphordanza.budgetup.wallets.AddWalletFragment"
+        android:label="fragment_add_wallet"
+        tools:layout="@layout/fragment_add_wallet" />
+    <fragment
+        android:id="@+id/addTransactionFragment"
+        android:name="com.ralphordanza.budgetup.transactions.AddTransactionFragment"
+        android:label="fragment_add_transaction"
+        tools:layout="@layout/fragment_add_transaction" />
 </navigation>
