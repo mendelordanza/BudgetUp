@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup
+package com.ralphordanza.budgetup.wallets
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ralphordanza.budgetup.HomeFragmentDirections
 import com.ralphordanza.budgetup.databinding.FragmentHomeBinding
 import com.ralphordanza.budgetup.models.Wallet
-import com.ralphordanza.budgetup.wallets.WalletAdapter
 
 class HomeFragment : Fragment() {
 
@@ -46,7 +46,10 @@ class HomeFragment : Fragment() {
     private fun setupRecyclerView() {
         walletAdapter = WalletAdapter(mutableListOf()){
             //On click wallet item
-            val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(it)
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(
+                    it
+                )
             findNavController().navigate(action)
         }
         binding.rvWallets.apply {

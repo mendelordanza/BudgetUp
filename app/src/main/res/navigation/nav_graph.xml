@@ -6,7 +6,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.ralphordanza.budgetup.HomeFragment"
+        android:name="com.ralphordanza.budgetup.wallets.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
