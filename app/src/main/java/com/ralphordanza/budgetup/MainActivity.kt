@@ -16,6 +16,7 @@ import com.ralphordanza.budgetup.wallets.AddWalletFragment
 import com.ralphordanza.budgetup.wallets.HomeFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
 import splitties.toast.toast
+import splitties.views.imageResource
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +45,9 @@ class MainActivity : AppCompatActivity() {
                         navController.navigate(action)
                     }
                     binding.bottomAppBar.performShow()
+
+                    binding.fab.hide()
+                    binding.fab.imageResource = R.drawable.ic_wallet
                     binding.fab.show()
                 }
                 R.id.transactionsFragment -> {
@@ -52,6 +56,9 @@ class MainActivity : AppCompatActivity() {
                         navController.navigate(action)
                     }
                     binding.bottomAppBar.performShow()
+
+                    binding.fab.hide()
+                    binding.fab.imageResource = R.drawable.ic_transaction_white
                     binding.fab.show()
                 }
                 R.id.addWalletFragment, R.id.addTransactionFragment -> {
