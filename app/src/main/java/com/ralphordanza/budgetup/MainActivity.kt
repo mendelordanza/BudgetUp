@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
 import com.ralphordanza.budgetup.transactions.TransactionsFragmentDirections
 import com.ralphordanza.budgetup.wallets.AddWalletFragment
+import com.ralphordanza.budgetup.wallets.HomeFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
 import splitties.toast.toast
 
