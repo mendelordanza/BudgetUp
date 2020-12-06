@@ -62,11 +62,12 @@
             android:orientation="vertical">
 
             <!-- Redirect to icon change -->
-            <ImageView
+            <ImageButton
                 android:id="@+id/icon_wallet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:background="?attr/selectableItemBackground"
                 android:src="@drawable/ic_add_wallet" />
 
             <EditText
