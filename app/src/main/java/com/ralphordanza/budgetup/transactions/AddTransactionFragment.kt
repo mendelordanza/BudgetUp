@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.FragmentAddTransactionBinding
+import splitties.toast.toast
 
 class AddTransactionFragment : Fragment() {
     companion object {
@@ -36,6 +37,10 @@ class AddTransactionFragment : Fragment() {
     private fun attachActions(){
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.etAmount.setOnClickListener {
+            toast("Redirect to calculator")
         }
     }
 }
