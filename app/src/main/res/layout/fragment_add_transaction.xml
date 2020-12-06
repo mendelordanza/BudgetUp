@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:clickable="true"
-                android:focusable="true"
+                android:focusable="false"
                 android:hint="Enter amount"
                 android:textSize="18sp" />
 
@@ -81,7 +81,7 @@
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_folder"
                 android:drawablePadding="8dp"
-                android:focusable="true"
+                android:focusable="false"
                 android:hint="@string/select_category"
                 android:padding="15dp"
                 android:textSize="14sp" />
@@ -95,7 +95,7 @@
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_wallet"
                 android:drawablePadding="8dp"
-                android:focusable="true"
+                android:focusable="false"
                 android:hint="@string/select_wallet"
                 android:padding="15dp"
                 android:textSize="14sp" />
