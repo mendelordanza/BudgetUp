@@ -15,9 +15,16 @@ data class Wallet(
 data class Transaction(
     val id: String,
     val date: String,
-    val categoryId: String,
-    val walletId: String,
+    val category: String,
+    val wallet: String,
     val note: String = ""
+) : Parcelable
+
+@Parcelize
+data class TransactionSection(
+    val id: String,
+    val month: String,
+    val items: List<Transaction>
 ) : Parcelable
 
 @Parcelize
