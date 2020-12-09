@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "411104385335",
+    "firebase_url": "https://budgetup-eb50b.firebaseio.com",
+    "project_id": "budgetup-eb50b",
+    "storage_bucket": "budgetup-eb50b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411104385335:android:616bbdbc24716cbb15e2b2",
+        "android_client_info": {
+          "package_name": "com.ralphordanza.budgetup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411104385335-hb3ah1s2blf3ltf7hsnaqp8q5spq1qpa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyRRoe0pJUX237n_Tv7uocHiPwOfFZlUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411104385335-hb3ah1s2blf3ltf7hsnaqp8q5spq1qpa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

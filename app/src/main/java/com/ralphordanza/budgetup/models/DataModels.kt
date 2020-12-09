@@ -1,15 +1,18 @@
 package com.ralphordanza.budgetup.models
 
 import android.os.Parcelable
+import com.google.firebase.database.PropertyName
 import kotlinx.android.parcel.Parcelize
 
 
 @Parcelize
 data class Wallet(
-    val id: String,
-    val name: String,
-    val amount: String
-) : Parcelable
+    @PropertyName("id") val id: String,
+    @PropertyName("name") val name: String,
+    @PropertyName("amount") val amount: String
+) : Parcelable {
+    constructor() : this("", "", "")
+}
 
 @Parcelize
 data class Transaction(
