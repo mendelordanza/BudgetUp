@@ -62,7 +62,5 @@ dependencies {
     implementation "com.louiscad.splitties:splitties-fun-pack-android-base:$splitties_version"
 
     //Firebase
-    implementation platform('com.google.firebase:firebase-bom:26.1.1')
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-database:19.5.1'
 }
