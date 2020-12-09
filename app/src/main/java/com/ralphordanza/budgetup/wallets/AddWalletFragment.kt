@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.database.FirebaseDatabase
 import com.ralphordanza.budgetup.databinding.FragmentAddWalletBinding
+import com.ralphordanza.budgetup.models.Wallet
 
 class AddWalletFragment : Fragment() {
     companion object {
@@ -31,9 +33,27 @@ class AddWalletFragment : Fragment() {
         attachActions()
     }
 
-    private fun attachActions(){
+    private fun attachActions() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        binding.btnAdd.setOnClickListener {
+            saveToDb()
+        }
+    }
+
+    private fun saveToDb() {
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("wallets")
+
+        val id = myRef.push().key ?: Long.MIN_VALUE.toString()
+        val wallet = Wallet(
+            id,
+            binding.etName.text.toString(),
+            binding.etAmount.text.toString()
+        )
+        myRef.child(id).setValue(wallet)
+        findNavController().popBackStack()
     }
 }

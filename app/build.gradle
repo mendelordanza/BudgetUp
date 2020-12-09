@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -59,4 +60,7 @@ dependencies {
 
     //Splitties
     implementation "com.louiscad.splitties:splitties-fun-pack-android-base:$splitties_version"
+
+    //Firebase
+    implementation 'com.google.firebase:firebase-database:19.5.1'
 }
