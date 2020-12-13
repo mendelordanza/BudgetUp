@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.databinding.ActivityRegisterBinding
 import com.ralphordanza.budgetup.framework.ui.MainActivity
+import com.ralphordanza.budgetup.framework.ui.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.activities.start
 
@@ -37,6 +38,10 @@ class RegisterActivity : AppCompatActivity() {
         binding.btnRegister.setOnClickListener {
             //TODO create clean architecture
             registerUser()
+        }
+
+        binding.btnLogin.setOnClickListener {
+            start<LoginActivity>()
         }
     }
 
