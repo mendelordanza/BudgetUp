@@ -7,7 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentTransactionsBinding
+import com.ralphordanza.budgetup.models.Transaction
+import com.ralphordanza.budgetup.models.TransactionSection
+import splitties.toast.toast
 
 class TransactionsFragment : Fragment() {
 
@@ -15,6 +19,7 @@ class TransactionsFragment : Fragment() {
         fun newInstance() = TransactionsFragment()
     }
 
+    private lateinit var headerTransactionAdapter: HeaderTransactionAdapter
     private val args: TransactionsFragmentArgs by navArgs()
 
     private var _binding: FragmentTransactionsBinding? = null
@@ -32,6 +37,8 @@ class TransactionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUi()
+        setupTransactionList()
+        showDummyList()
         attachActions()
     }
 
@@ -44,5 +51,67 @@ class TransactionsFragment : Fragment() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun setupTransactionList(){
+        headerTransactionAdapter = HeaderTransactionAdapter { trans ->
+            //TODO onClick
+            toast(trans.wallet)
+        }
+        binding.rvGroupedTransactions.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = headerTransactionAdapter
+        }
+    }
+
+    private fun showDummyList(){
+        val dummyList1 = mutableListOf<Transaction>()
+        dummyList1.add(Transaction(
+            id = "0",
+            date = "01",
+            category = "Entertainment",
+            wallet = "BDO"
+        ))
+        dummyList1.add(Transaction(
+            id = "1",
+            date = "01",
+            category = "Entertainment",
+            wallet = "BDO"
+        ))
+        dummyList1.add(Transaction(
+            id = "2",
+            date = "01",
+            category = "Entertainment",
+            wallet = "ING"
+        ))
+        dummyList1.add(Transaction(
+            id = "0",
+            date = "01",
+            category = "Entertainment",
+            wallet = "BDO"
+        ))
+        dummyList1.add(Transaction(
+            id = "1",
+            date = "04",
+            category = "Entertainment",
+            wallet = "BDO"
+        ))
+        dummyList1.add(Transaction(
+            id = "2",
+            date = "04",
+            category = "Entertainment",
+            wallet = "ING"
+        ))
+
+        val months = listOf("01", "02", "03", "04")
+        val dummySection = months.map { month ->
+            val filteredList = dummyList1.filter { trans ->
+                trans.date == month
+            }
+            TransactionSection(Long.MIN_VALUE.toString(), month, filteredList)
+        }
+
+
+        headerTransactionAdapter.submitList(dummySection)
     }
 }
