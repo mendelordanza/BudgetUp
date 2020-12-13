@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
     android:fillViewport="true"
-    tools:context=".RegisterActivity">
+    tools:context=".framework.ui.register.RegisterActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_gradient"
-        tools:context=".RegisterActivity">
+        tools:context=".framework.ui.register.RegisterActivity">
 
         <ImageView
             android:id="@+id/img_logo"
