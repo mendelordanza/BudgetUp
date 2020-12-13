@@ -2,6 +2,9 @@ package com.ralphordanza.budgetup
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -10,11 +13,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
 import com.ralphordanza.budgetup.transactions.TransactionsFragmentDirections
 import com.ralphordanza.budgetup.wallets.AddWalletFragment
 import com.ralphordanza.budgetup.wallets.HomeFragmentDirections
 import kotlinx.android.synthetic.main.activity_main.*
+import splitties.activities.start
 import splitties.toast.toast
 import splitties.views.imageResource
 

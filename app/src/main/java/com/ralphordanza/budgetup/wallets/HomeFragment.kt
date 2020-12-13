@@ -1,16 +1,19 @@
 package com.ralphordanza.budgetup.wallets
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.databinding.FragmentHomeBinding
 import com.ralphordanza.budgetup.models.Wallet
 
@@ -72,29 +75,24 @@ class HomeFragment : Fragment() {
 //        dummyList.add(Wallet("3", "Cash", "PHP 9,000.00"))
 //        walletAdapter.updateList(dummyList)
 
-        val database = FirebaseDatabase.getInstance()
-        val walletRef = database.getReference("wallets")
-
-        walletRef.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-//                val list = snapshot.children.map {
-//                    val wallet = snapshot.getValue(Wallet::class.java)
-//                    wallet
-//                }
-                val list = mutableListOf<Wallet>()
-                for (wallet in snapshot.children) {
-                    val item = wallet.getValue(Wallet::class.java)
-                    if (item != null) {
-                        list.add(item)
+        //TODO create clean architecture
+        FirebaseAuth.getInstance().currentUser?.uid?.let { id ->
+            val docRef =
+                FirebaseFirestore.getInstance().collection("users").document(
+                    id
+                )
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        binding.txtAmount.text = document.data?.get("firstName").toString()
+                    } else {
+                        Log.d("AUTH", "No such document")
                     }
                 }
-                walletAdapter.submitList(list)
-            }
+                .addOnFailureListener { exception ->
+                    Log.d("AUTH", "get failed with ", exception)
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
+        }
     }
 }
