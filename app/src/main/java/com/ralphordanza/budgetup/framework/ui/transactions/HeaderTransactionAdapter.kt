@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.transactions
+package com.ralphordanza.budgetup.framework.ui.transactions
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemTransactionHeaderBinding
-import com.ralphordanza.budgetup.models.Transaction
-import com.ralphordanza.budgetup.models.TransactionSection
+import com.ralphordanza.budgetup.core.domain.Transaction
+import com.ralphordanza.budgetup.core.domain.TransactionSection
 
 class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -> Unit) :
     ListAdapter<TransactionSection, HeaderTransactionAdapter.ViewHolder>(DiffCallback()) {
@@ -19,7 +19,7 @@ class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): HeaderTransactionAdapter.ViewHolder {
+    ): ViewHolder {
         binding = ItemTransactionHeaderBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -28,7 +28,7 @@ class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: HeaderTransactionAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transactionSection = getItem(position) as TransactionSection
         holder.bind(transactionSection)
     }

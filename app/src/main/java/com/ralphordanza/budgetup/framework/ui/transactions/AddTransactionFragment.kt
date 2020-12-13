@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.transactions
+package com.ralphordanza.budgetup.framework.ui.transactions
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

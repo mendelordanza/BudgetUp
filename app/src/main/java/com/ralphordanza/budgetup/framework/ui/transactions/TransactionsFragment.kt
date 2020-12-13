@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.transactions
+package com.ralphordanza.budgetup.framework.ui.transactions
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,8 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentTransactionsBinding
-import com.ralphordanza.budgetup.models.Transaction
-import com.ralphordanza.budgetup.models.TransactionSection
+import com.ralphordanza.budgetup.core.domain.Transaction
+import com.ralphordanza.budgetup.core.domain.TransactionSection
 import splitties.toast.toast
 
 class TransactionsFragment : Fragment() {
@@ -42,18 +42,18 @@ class TransactionsFragment : Fragment() {
         attachActions()
     }
 
-    private fun setupUi(){
+    private fun setupUi() {
         binding.txtWallet.text = args.walletData.name
         binding.txtAmount.text = args.walletData.amount
     }
 
-    private fun attachActions(){
+    private fun attachActions() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
-    private fun setupTransactionList(){
+    private fun setupTransactionList() {
         headerTransactionAdapter = HeaderTransactionAdapter { trans ->
             //TODO onClick
             toast(trans.wallet)
@@ -64,44 +64,68 @@ class TransactionsFragment : Fragment() {
         }
     }
 
-    private fun showDummyList(){
+    private fun showDummyList() {
         val dummyList1 = mutableListOf<Transaction>()
-        dummyList1.add(Transaction(
-            id = "0",
-            date = "01",
-            category = "Entertainment",
-            wallet = "BDO"
-        ))
-        dummyList1.add(Transaction(
-            id = "1",
-            date = "01",
-            category = "Entertainment",
-            wallet = "BDO"
-        ))
-        dummyList1.add(Transaction(
-            id = "2",
-            date = "01",
-            category = "Entertainment",
-            wallet = "ING"
-        ))
-        dummyList1.add(Transaction(
-            id = "0",
-            date = "01",
-            category = "Entertainment",
-            wallet = "BDO"
-        ))
-        dummyList1.add(Transaction(
-            id = "1",
-            date = "04",
-            category = "Entertainment",
-            wallet = "BDO"
-        ))
-        dummyList1.add(Transaction(
-            id = "2",
-            date = "04",
-            category = "Entertainment",
-            wallet = "ING"
-        ))
+        dummyList1.add(
+            Transaction(
+                id = "0",
+                date = "01",
+                category = "Entertainment",
+                type = "Income",
+                amount = 1000.00,
+                wallet = "BDO"
+            )
+        )
+        dummyList1.add(
+            Transaction(
+                id = "1",
+                date = "01",
+                category = "Entertainment",
+                type = "Income",
+                amount = 1000.00,
+                wallet = "BDO"
+            )
+        )
+        dummyList1.add(
+            Transaction(
+                id = "2",
+                date = "01",
+                category = "Entertainment",
+                type = "Income",
+                amount = 1000.00,
+                wallet = "BDO"
+            )
+        )
+        dummyList1.add(
+            Transaction(
+                id = "3",
+                date = "01",
+                category = "Entertainment",
+                type = "Income",
+                amount = 1000.00,
+                wallet = "BDO"
+            )
+        )
+        dummyList1.add(
+            Transaction(
+                id = "4",
+                date = "01",
+                category = "Entertainment",
+                type = "Income",
+                amount = 1000.00,
+                wallet = "BDO"
+            )
+        )
+        dummyList1.add(
+            Transaction(
+                id = "5",
+                date = "01",
+                category = "Entertainment",
+                type = "Income",
+                amount = 1000.00,
+                wallet = "BDO"
+            )
+        )
 
         val months = listOf("01", "02", "03", "04")
         val dummySection = months.map { month ->

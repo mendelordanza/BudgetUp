@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.transactions
+package com.ralphordanza.budgetup.framework.ui.transactions
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemTransactionBinding
-import com.ralphordanza.budgetup.models.Transaction
+import com.ralphordanza.budgetup.core.domain.Transaction
 
 class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction) -> Unit) :
     ListAdapter<Transaction, ItemTransactionAdapter.ViewHolder>(DiffCallback()) {
@@ -15,7 +15,7 @@ class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction)
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ItemTransactionAdapter.ViewHolder {
+    ): ViewHolder {
         binding = ItemTransactionBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -24,7 +24,7 @@ class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction)
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ItemTransactionAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val transactionItem = getItem(position) as Transaction
         holder.bind(transactionItem)
     }

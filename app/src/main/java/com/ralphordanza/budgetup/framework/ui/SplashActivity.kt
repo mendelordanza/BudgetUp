@@ -1,10 +1,9 @@
-package com.ralphordanza.budgetup
+package com.ralphordanza.budgetup.framework.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
+import com.ralphordanza.budgetup.framework.ui.register.RegisterActivity
 import splitties.activities.start
-import splitties.activities.startActivity
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

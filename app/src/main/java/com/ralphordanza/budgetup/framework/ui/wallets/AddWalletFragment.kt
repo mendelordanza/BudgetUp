@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.wallets
+package com.ralphordanza.budgetup.framework.ui.wallets
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.FirebaseDatabase
 import com.ralphordanza.budgetup.databinding.FragmentAddWalletBinding
-import com.ralphordanza.budgetup.models.Wallet
+import com.ralphordanza.budgetup.core.domain.Wallet
 
 class AddWalletFragment : Fragment() {
     companion object {

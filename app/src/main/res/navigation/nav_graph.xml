@@ -6,7 +6,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.ralphordanza.budgetup.wallets.HomeFragment"
+        android:name="com.ralphordanza.budgetup.framework.ui.wallets.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -22,24 +22,24 @@
     </fragment>
     <fragment
         android:id="@+id/transactionsFragment"
-        android:name="com.ralphordanza.budgetup.transactions.TransactionsFragment"
+        android:name="com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragment"
         android:label="fragment_transactions"
         tools:layout="@layout/fragment_transactions" >
         <argument
             android:name="walletData"
-            app:argType="com.ralphordanza.budgetup.models.Wallet" />
+            app:argType="com.ralphordanza.budgetup.core.domain.Wallet" />
         <action
             android:id="@+id/action_transactionsFragment_to_addTransactionFragment"
             app:destination="@id/addTransactionFragment" />
     </fragment>
     <fragment
         android:id="@+id/addWalletFragment"
-        android:name="com.ralphordanza.budgetup.wallets.AddWalletFragment"
+        android:name="com.ralphordanza.budgetup.framework.ui.wallets.AddWalletFragment"
         android:label="fragment_add_wallet"
         tools:layout="@layout/fragment_add_wallet" />
     <fragment
         android:id="@+id/addTransactionFragment"
-        android:name="com.ralphordanza.budgetup.transactions.AddTransactionFragment"
+        android:name="com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragment"
         android:label="fragment_add_transaction"
         tools:layout="@layout/fragment_add_transaction" />
 </navigation>
