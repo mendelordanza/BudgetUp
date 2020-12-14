@@ -2,20 +2,27 @@ package com.ralphordanza.budgetup.framework.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
+import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.wallets.HomeFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
 import splitties.views.imageResource
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val loginViewModel: LoginViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

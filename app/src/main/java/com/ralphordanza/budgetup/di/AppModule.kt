@@ -1,6 +1,7 @@
 package com.ralphordanza.budgetup.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.core.data.datasource.TransactionDataSource
 import com.ralphordanza.budgetup.core.data.datasource.UserDataSource
 import com.ralphordanza.budgetup.core.data.datasource.WalletDataSource
@@ -22,8 +23,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserDataSource(firebaseAuth: FirebaseAuth) : UserDataSource{
-        return UserDataSourceImpl(firebaseAuth)
+    fun provideUserDataSource(firebaseAuth: FirebaseAuth, firebaseFirestore: FirebaseFirestore) : UserDataSource{
+        return UserDataSourceImpl(firebaseAuth, firebaseFirestore)
     }
 
     @Provides
