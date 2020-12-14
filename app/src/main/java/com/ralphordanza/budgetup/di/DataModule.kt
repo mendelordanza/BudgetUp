@@ -1,10 +1,7 @@
 package com.ralphordanza.budgetup.di
 
 import com.ralphordanza.budgetup.core.data.repository.UserRepository
-import com.ralphordanza.budgetup.core.interactors.Interactors
-import com.ralphordanza.budgetup.core.interactors.LoginUser
-import com.ralphordanza.budgetup.core.interactors.LogoutUser
-import com.ralphordanza.budgetup.core.interactors.RegisterUser
+import com.ralphordanza.budgetup.core.interactors.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,6 +17,11 @@ object DataModule {
     }
 
     @Provides
+    fun provideSaveToFirestore(userRepository: UserRepository) : SaveToFirestore {
+        return SaveToFirestore(userRepository)
+    }
+
+    @Provides
     fun provideLoginUser(userRepository: UserRepository) : LoginUser {
         return LoginUser(userRepository)
     }
@@ -32,11 +34,13 @@ object DataModule {
     @Provides
     fun provideInteractors(
         registerUser: RegisterUser,
+        saveToFirestore: SaveToFirestore,
         loginUser: LoginUser,
         logoutUser: LogoutUser
     ) : Interactors {
         return Interactors(
             registerUser,
+            saveToFirestore,
             loginUser,
             logoutUser
         )
