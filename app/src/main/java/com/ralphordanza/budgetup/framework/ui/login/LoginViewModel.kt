@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseUser
+import com.ralphordanza.budgetup.core.domain.Failed
 import com.ralphordanza.budgetup.core.domain.Success
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import kotlinx.coroutines.launch
@@ -31,9 +31,9 @@ class LoginViewModel @ViewModelInject constructor(private val interactors: Inter
                 isLoading.value = false
                 loginResult.postValue(result.data)
             }
-            is Error -> {
+            is Failed -> {
                 isLoading.value = false
-                message.value = result.message ?: "Something went wrong."
+                message.value = result.message
             }
         }
     }

@@ -5,7 +5,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.core.data.datasource.UserDataSource
-import com.ralphordanza.budgetup.core.domain.Error
+import com.ralphordanza.budgetup.core.domain.Failed
 import com.ralphordanza.budgetup.core.domain.Result
 import com.ralphordanza.budgetup.core.domain.Success
 import com.ralphordanza.budgetup.core.domain.User
@@ -39,7 +39,7 @@ class UserDataSourceImpl @Inject constructor(
             val task = firebaseAuth.signInWithEmailAndPassword(email, password)
             Success(awaitTaskResult(task))
         } catch (e: Exception){
-            Error(Exception(e.localizedMessage))
+            Failed(Exception(e.localizedMessage))
         }
     }
 
