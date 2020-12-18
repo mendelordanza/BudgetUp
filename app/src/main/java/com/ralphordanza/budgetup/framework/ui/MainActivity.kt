@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
 import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
@@ -23,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val loginViewModel: LoginViewModel by viewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -38,9 +38,13 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
+        setSupportActionBar(binding.appBar.toolbar)
+        setupActionBarWithNavController(navController)
+
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id){
                 R.id.homeFragment -> {
+                    supportActionBar?.hide()
                     binding.fab.setOnClickListener {
                         val action = HomeFragmentDirections.actionHomeFragmentToAddWalletFragment()
                         navController.navigate(action)
@@ -52,6 +56,7 @@ class MainActivity : AppCompatActivity() {
                     binding.fab.show()
                 }
                 R.id.transactionsFragment -> {
+                    supportActionBar?.show()
                     binding.fab.setOnClickListener {
                         val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment()
                         navController.navigate(action)
@@ -63,11 +68,16 @@ class MainActivity : AppCompatActivity() {
                     binding.fab.show()
                 }
                 R.id.addWalletFragment, R.id.addTransactionFragment -> {
+                    supportActionBar?.show()
                     binding.bottomAppBar.performHide()
                     binding.fab.hide()
                 }
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     private fun attachActions(){

@@ -31,6 +31,7 @@ class RegisterActivity : AppCompatActivity() {
 
         if (firebaseAuth.currentUser != null) {
             start<MainActivity>()
+            finish()
         }
 
         attachActions()

@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/addWalletFragment"
         android:name="com.ralphordanza.budgetup.framework.ui.wallets.AddWalletFragment"
-        android:label="fragment_add_wallet"
+        android:label="Add Wallet"
         tools:layout="@layout/fragment_add_wallet" />
     <fragment
         android:id="@+id/addTransactionFragment"
