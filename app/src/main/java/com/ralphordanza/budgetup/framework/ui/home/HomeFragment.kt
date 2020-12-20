@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.framework.ui.wallets
+package com.ralphordanza.budgetup.framework.ui.home
 
 import android.os.Bundle
 import android.util.Log
@@ -6,12 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.databinding.FragmentHomeBinding
+import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
+import com.ralphordanza.budgetup.framework.ui.wallets.WalletAdapter
+import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     companion object {
@@ -19,6 +26,7 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var walletAdapter: WalletAdapter
+    private val walletViewModel: WalletViewModel by viewModels()
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -41,7 +49,8 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        showDummyData()
+        walletViewModel.getWallets("OOH92EP8RrjjvDFX2kiN")
+        observeData()
     }
 
     private fun setupRecyclerView() {
@@ -58,36 +67,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showDummyData(){
-//        val dummyList = mutableListOf<Wallet>()
-//        dummyList.add(Wallet("0", "BDO", "PHP 5,000.00"))
-//        dummyList.add(Wallet("1", "ING", "PHP 10,000.00"))
-//        dummyList.add(Wallet("2", "RBank", "PHP 5,000.00"))
-//        dummyList.add(Wallet("3", "Cash", "PHP 9,000.00"))
-//        dummyList.add(Wallet("0", "BDO", "PHP 5,000.00"))
-//        dummyList.add(Wallet("1", "ING", "PHP 10,000.00"))
-//        dummyList.add(Wallet("2", "RBank", "PHP 5,000.00"))
-//        dummyList.add(Wallet("3", "Cash", "PHP 9,000.00"))
-//        walletAdapter.updateList(dummyList)
-
-        //TODO create clean architecture
-        FirebaseAuth.getInstance().currentUser?.uid?.let { id ->
-            val docRef =
-                FirebaseFirestore.getInstance().collection("users").document(
-                    id
-                )
-            docRef.get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        binding.txtAmount.text = document.data?.get("firstName").toString()
-                    } else {
-                        Log.d("AUTH", "No such document")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d("AUTH", "get failed with ", exception)
-                }
-
-        }
+    private fun observeData(){
+        walletViewModel.getWallets().observe(viewLifecycleOwner, Observer { wallets ->
+            walletAdapter.submitList(wallets)
+        })
     }
 }

@@ -1,9 +1,8 @@
 package com.ralphordanza.budgetup.core.data.implementation
 
-import android.util.Log
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.core.data.datasource.UserDataSource
@@ -11,7 +10,6 @@ import com.ralphordanza.budgetup.core.domain.Failed
 import com.ralphordanza.budgetup.core.domain.Result
 import com.ralphordanza.budgetup.core.domain.Success
 import com.ralphordanza.budgetup.core.domain.User
-import com.ralphordanza.budgetup.framework.extensions.awaitTaskCompletable
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
 import java.lang.Exception
 import javax.inject.Inject
@@ -52,7 +50,8 @@ class UserDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout() {
+    override suspend fun logout(): FirebaseUser? {
         firebaseAuth.signOut()
+        return firebaseAuth.currentUser
     }
 }

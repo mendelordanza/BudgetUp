@@ -6,10 +6,12 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.ActivityLoginBinding
 import com.ralphordanza.budgetup.databinding.ActivityRegisterBinding
 import com.ralphordanza.budgetup.framework.ui.MainActivity
+import com.ralphordanza.budgetup.framework.ui.register.RegisterActivity
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.activities.start
 import splitties.toast.toast
@@ -32,6 +34,10 @@ class LoginActivity : AppCompatActivity() {
     private fun attachActions() {
         binding.btnLogin.setOnClickListener {
             loginUser()
+        }
+
+        binding.btnRegister.setOnClickListener {
+            start<RegisterActivity>()
         }
     }
 

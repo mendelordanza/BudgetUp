@@ -39,18 +39,11 @@ class TransactionsFragment : Fragment() {
         setupUi()
         setupTransactionList()
         showDummyList()
-        attachActions()
     }
 
     private fun setupUi() {
         binding.txtWallet.text = args.walletData.name
         binding.txtAmount.text = args.walletData.amount
-    }
-
-    private fun attachActions() {
-        binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun setupTransactionList() {

@@ -29,8 +29,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWalletDataSource() : WalletDataSource{
-        return WalletDataSourceImpl()
+    fun provideWalletDataSource(firebaseFirestore: FirebaseFirestore) : WalletDataSource{
+        return WalletDataSourceImpl(firebaseFirestore)
     }
 
     @Provides
