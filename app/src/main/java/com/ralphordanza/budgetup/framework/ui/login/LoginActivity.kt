@@ -48,13 +48,14 @@ class LoginActivity : AppCompatActivity() {
     private fun observeData(){
         loginViewModel.getIsLoading().observe(this, Observer { loading ->
             binding.progressBar.isVisible = loading
+            binding.btnLogin.isVisible = !loading
         })
 
         loginViewModel.getLoginResult().observe(this, Observer { result ->
             //user.uid
             result.user?.let { user ->
                 start<MainActivity>()
-                finish()
+                finishAffinity()
             }
         })
 
