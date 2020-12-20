@@ -1,6 +1,7 @@
 package com.ralphordanza.budgetup.di
 
 import com.ralphordanza.budgetup.core.data.repository.UserRepository
+import com.ralphordanza.budgetup.core.data.repository.WalletRepository
 import com.ralphordanza.budgetup.core.interactors.*
 import dagger.Module
 import dagger.Provides
@@ -32,17 +33,31 @@ object DataModule {
     }
 
     @Provides
+    fun provideGetWallets(walletReposiroy: WalletRepository) : GetWallets {
+        return GetWallets(walletReposiroy)
+    }
+
+    @Provides
+    fun provideAddWallet(walletReposiroy: WalletRepository) : AddWallet {
+        return AddWallet(walletReposiroy)
+    }
+
+    @Provides
     fun provideInteractors(
         registerUser: RegisterUser,
         saveToFirestore: SaveToFirestore,
         loginUser: LoginUser,
-        logoutUser: LogoutUser
+        logoutUser: LogoutUser,
+        getWallets: GetWallets,
+        addWallet: AddWallet
     ) : Interactors {
         return Interactors(
             registerUser,
             saveToFirestore,
             loginUser,
-            logoutUser
+            logoutUser,
+            getWallets,
+            addWallet
         )
     }
 }

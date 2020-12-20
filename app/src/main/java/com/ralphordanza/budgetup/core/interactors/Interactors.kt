@@ -5,5 +5,9 @@ data class Interactors(
     val registerUser: RegisterUser,
     val saveToFirestore: SaveToFirestore,
     val loginUser: LoginUser,
-    val logoutUser: LogoutUser
-)
+    val logoutUser: LogoutUser,
+
+    //Wallet
+    val getWallets: GetWallets,
+    val addWallet: AddWallet
+    )

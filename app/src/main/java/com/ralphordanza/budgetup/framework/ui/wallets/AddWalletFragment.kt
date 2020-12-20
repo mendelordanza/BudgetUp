@@ -6,12 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.FirebaseDatabase
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.FragmentAddWalletBinding
 import com.ralphordanza.budgetup.core.domain.Wallet
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AddWalletFragment : Fragment() {
     companion object {
         fun newInstance() = AddWalletFragment()
@@ -19,6 +23,8 @@ class AddWalletFragment : Fragment() {
 
     private var _binding: FragmentAddWalletBinding? = null
     private val binding get() = _binding!!
+
+    private val walletViewModel: WalletViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,10 +40,11 @@ class AddWalletFragment : Fragment() {
 
         setupAssets()
         attachActions()
+        observeData()
     }
 
-    private fun setupAssets(){
-        when(resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK){
+    private fun setupAssets() {
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES -> {
                 binding.iconWallet.setImageResource(R.drawable.ic_add_wallet_light)
             }
@@ -49,7 +56,7 @@ class AddWalletFragment : Fragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        when(newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK){
+        when (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES -> {
                 binding.iconWallet.setImageResource(R.drawable.ic_add_wallet_light)
             }
@@ -61,21 +68,19 @@ class AddWalletFragment : Fragment() {
 
     private fun attachActions() {
         binding.btnAdd.setOnClickListener {
-            saveToDb()
+            walletViewModel.addWallet(
+                "OOH92EP8RrjjvDFX2kiN",
+                binding.etName.text.toString(),
+                binding.etAmount.text.toString()
+            )
         }
     }
 
-    private fun saveToDb() {
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.getReference("wallets")
-
-        val id = myRef.push().key ?: Long.MIN_VALUE.toString()
-        val wallet = Wallet(
-            id,
-            binding.etName.text.toString(),
-            binding.etAmount.text.toString()
-        )
-        myRef.child(id).setValue(wallet)
-        findNavController().popBackStack()
+    private fun observeData() {
+        walletViewModel.getIsAdded().observe(viewLifecycleOwner, Observer { walletAdded ->
+            if(walletAdded){
+                findNavController().popBackStack()
+            }
+        })
     }
 }

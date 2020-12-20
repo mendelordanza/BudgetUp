@@ -1,12 +1,43 @@
 package com.ralphordanza.budgetup.core.data.implementation
 
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.core.data.datasource.WalletDataSource
+import com.ralphordanza.budgetup.core.domain.Failed
+import com.ralphordanza.budgetup.core.domain.Result
+import com.ralphordanza.budgetup.core.domain.Success
 import com.ralphordanza.budgetup.core.domain.Wallet
+import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
+import javax.inject.Inject
 
-class WalletDataSourceImpl() : WalletDataSource {
+class WalletDataSourceImpl @Inject constructor(private val firebaseFirestore: FirebaseFirestore) : WalletDataSource {
 
-    override suspend fun addWallet(wallet: Wallet) {
+    override suspend fun getWallets(userId: String): List<Wallet> {
+        return firebaseFirestore.collection("users")
+            .document(userId)
+            .collection("wallets")
+            .get()
+            .await()
+            .toObjects(Wallet::class.java)
+    }
 
+    override suspend fun addWallet(userId: String, walletName: String, initialAmt: String): Result<DocumentReference> {
+        return try{
+            val wallet = hashMapOf(
+                "name" to walletName,
+                "amount" to initialAmt
+            )
+            val docRef = firebaseFirestore.collection("users")
+                .document(userId)
+                .collection("wallets")
+                .add(wallet)
+            Success(awaitTaskResult(docRef))
+        } catch (e: Exception){
+            Failed(Exception(e.localizedMessage))
+        }
     }
 
     override suspend fun adjustWallet(wallet: Wallet) {

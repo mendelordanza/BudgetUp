@@ -41,7 +41,7 @@
                     android:id="@+id/et_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Wallet Name"
+                    android:hint="@string/wallet_name"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -56,7 +56,7 @@
                     android:id="@+id/et_amount"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Initial Amount"
+                    android:hint="@string/initial_amount"
                     android:inputType="numberDecimal" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:padding="15dp"
-        android:text="ADD"
+        android:text="@string/add"
         android:textSize="14sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

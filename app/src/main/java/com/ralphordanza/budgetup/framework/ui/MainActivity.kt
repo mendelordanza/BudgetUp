@@ -2,8 +2,8 @@ package com.ralphordanza.budgetup.framework.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -12,8 +12,10 @@ import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
 import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentDirections
-import com.ralphordanza.budgetup.framework.ui.wallets.HomeFragmentDirections
+import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
+import com.ralphordanza.budgetup.framework.ui.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
+import splitties.activities.start
 import splitties.toast.toast
 import splitties.views.imageResource
 
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         setupNavigation()
         attachActions()
+        observerData()
     }
 
     private fun setupNavigation(){
@@ -49,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                         val action = HomeFragmentDirections.actionHomeFragmentToAddWalletFragment()
                         navController.navigate(action)
                     }
-                    binding.bottomAppBar.performShow()
+                    showBottomAppBar()
 
                     binding.fab.hide()
                     binding.fab.imageResource = R.drawable.ic_wallet
@@ -61,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                         val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment()
                         navController.navigate(action)
                     }
-                    binding.bottomAppBar.performShow()
+                    showBottomAppBar()
 
                     binding.fab.hide()
                     binding.fab.imageResource = R.drawable.ic_transaction_white
@@ -69,11 +72,19 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.addWalletFragment, R.id.addTransactionFragment -> {
                     supportActionBar?.show()
-                    binding.bottomAppBar.performHide()
+                    hideBottomAppBar()
                     binding.fab.hide()
                 }
             }
         }
+    }
+
+    private fun hideBottomAppBar(){
+        binding.bottomAppBar.performHide()
+    }
+
+    private fun showBottomAppBar(){
+        binding.bottomAppBar.performShow()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -84,5 +95,20 @@ class MainActivity : AppCompatActivity() {
         binding.bottomAppBar.setNavigationOnClickListener {
             toast("Navigation")
         }
+        binding.bottomAppBar.setOnMenuItemClickListener {
+            if(it.itemId == R.id.bottom_nav_more){
+                loginViewModel.logout()
+            }
+            true
+        }
+    }
+
+    private fun observerData(){
+        loginViewModel.getLogout().observe(this, Observer { isLoggedOut ->
+            if(isLoggedOut){
+                start<LoginActivity>()
+                finishAffinity()
+            }
+        })
     }
 }

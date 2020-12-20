@@ -7,5 +7,5 @@ import com.ralphordanza.budgetup.core.domain.User
 import javax.inject.Inject
 
 class RegisterUser @Inject constructor(private val userRepository: UserRepository) {
-    suspend operator fun invoke(user: User): Result<AuthResult> = userRepository.register(user)
+    suspend operator fun invoke(user: User) = userRepository.register(user)
 }

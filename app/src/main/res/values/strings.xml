@@ -6,4 +6,7 @@
     <string name="select_wallet">Select Wallet</string>
     <string name="notes">Notes</string>
     <string name="date">Date</string>
+    <string name="add">ADD</string>
+    <string name="initial_amount">Initial Amount</string>
+    <string name="wallet_name">Wallet Name</string>
 </resources>

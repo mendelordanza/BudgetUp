@@ -18,6 +18,9 @@ class LoginViewModel @ViewModelInject constructor(private val interactors: Inter
     private val loginResult = MutableLiveData<AuthResult>()
     fun getLoginResult(): LiveData<AuthResult> = loginResult
 
+    private val logout = MutableLiveData<Boolean>()
+    fun getLogout(): LiveData<Boolean> = logout
+
     private val message = MutableLiveData<String>()
     fun getMessage(): LiveData<String> = message
 
@@ -39,6 +42,6 @@ class LoginViewModel @ViewModelInject constructor(private val interactors: Inter
     }
 
     fun logout() = viewModelScope.launch {
-        interactors.logoutUser
+        logout.value = interactors.logoutUser() == null
     }
 }

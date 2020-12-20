@@ -9,13 +9,11 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(private val userDataSource: UserDataSource) {
 
-    suspend fun register(user: User): Result<AuthResult> = userDataSource.register(user)
+    suspend fun register(user: User) = userDataSource.register(user)
 
-    suspend fun saveToFirestore(user: User): Result<DocumentReference> = userDataSource.saveToFirestore(user)
+    suspend fun saveToFirestore(user: User) = userDataSource.saveToFirestore(user)
 
-    suspend fun login(email: String, password: String): Result<AuthResult> {
-        return userDataSource.login(email, password)
-    }
+    suspend fun login(email: String, password: String) = userDataSource.login(email, password)
 
     suspend fun logout() = userDataSource.logout()
 }
