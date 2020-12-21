@@ -49,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.getIsLoading().observe(this, Observer { loading ->
             binding.progressBar.isVisible = loading
             binding.btnLogin.isVisible = !loading
+            binding.btnGuest.isVisible = !loading
         })
 
         loginViewModel.getLoginResult().observe(this, Observer { result ->

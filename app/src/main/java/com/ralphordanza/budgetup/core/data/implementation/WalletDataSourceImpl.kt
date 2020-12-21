@@ -1,8 +1,6 @@
 package com.ralphordanza.budgetup.core.data.implementation
 
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import com.ralphordanza.budgetup.core.data.datasource.WalletDataSource
 import com.ralphordanza.budgetup.core.domain.Failed
 import com.ralphordanza.budgetup.core.domain.Result
@@ -19,6 +17,7 @@ class WalletDataSourceImpl @Inject constructor(private val firebaseFirestore: Fi
         return firebaseFirestore.collection("users")
             .document(userId)
             .collection("wallets")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
             .get()
             .await()
             .toObjects(Wallet::class.java)
@@ -28,7 +27,8 @@ class WalletDataSourceImpl @Inject constructor(private val firebaseFirestore: Fi
         return try{
             val wallet = hashMapOf(
                 "name" to walletName,
-                "amount" to initialAmt
+                "amount" to initialAmt,
+                "createdAt" to FieldValue.serverTimestamp()
             )
             val docRef = firebaseFirestore.collection("users")
                 .document(userId)
