@@ -36,6 +36,10 @@ class LoginActivity : AppCompatActivity() {
             loginUser()
         }
 
+        binding.btnGuest.setOnClickListener {
+            loginAsGuest()
+        }
+
         binding.btnRegister.setOnClickListener {
             start<RegisterActivity>()
         }
@@ -43,6 +47,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginUser() {
         loginViewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
+    }
+
+    private fun loginAsGuest(){
+        loginViewModel.loginAsGuest()
     }
 
     private fun observeData(){

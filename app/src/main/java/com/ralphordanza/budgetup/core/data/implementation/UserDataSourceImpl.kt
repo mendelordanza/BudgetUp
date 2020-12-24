@@ -19,11 +19,11 @@ class UserDataSourceImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) : UserDataSource {
 
-    override suspend fun register(user: User): Result<AuthResult> {
+    override suspend fun register(email: String, password: String): Result<AuthResult> {
         return try{
             val task = firebaseAuth.createUserWithEmailAndPassword(
-                user.email,
-                user.password
+                email,
+                password
             )
             Success(awaitTaskResult(task))
         } catch (e: Exception){
@@ -31,19 +31,29 @@ class UserDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveToFirestore(user: User): Result<DocumentReference> {
+    override suspend fun saveToFirestore(user: User): Boolean {
         return try{
-            val docRef = firebaseFirestore.collection("users")
-                .add(user)
-            Success(awaitTaskResult(docRef))
+            firebaseFirestore.collection("users")
+                .document(user.id)
+                .set(user)
+            true
         } catch (e: Exception){
-            Failed(Exception(e.localizedMessage))
+            false
         }
     }
 
     override suspend fun login(email: String, password: String): Result<AuthResult> {
         return try{
             val task = firebaseAuth.signInWithEmailAndPassword(email, password)
+            Success(awaitTaskResult(task))
+        } catch (e: Exception){
+            Failed(Exception(e.localizedMessage))
+        }
+    }
+
+    override suspend fun loginAsGuest(): Result<AuthResult>  {
+        return try{
+            val task = firebaseAuth.signInAnonymously()
             Success(awaitTaskResult(task))
         } catch (e: Exception){
             Failed(Exception(e.localizedMessage))

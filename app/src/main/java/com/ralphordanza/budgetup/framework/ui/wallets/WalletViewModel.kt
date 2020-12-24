@@ -9,10 +9,16 @@ import com.ralphordanza.budgetup.core.domain.Failed
 import com.ralphordanza.budgetup.core.domain.Success
 import com.ralphordanza.budgetup.core.domain.Wallet
 import com.ralphordanza.budgetup.core.interactors.Interactors
+import com.ralphordanza.budgetup.framework.utils.SessionManager
 import kotlinx.coroutines.launch
 
-class WalletViewModel @ViewModelInject constructor(private val interactors: Interactors) :
+class WalletViewModel @ViewModelInject constructor(
+    private val interactors: Interactors,
+    private val sessionManager: SessionManager
+) :
     ViewModel() {
+
+    fun getSessionManager() = sessionManager
 
     private val wallets = MutableLiveData<List<Wallet>>()
     fun getWallets(): LiveData<List<Wallet>> = wallets
@@ -28,7 +34,7 @@ class WalletViewModel @ViewModelInject constructor(private val interactors: Inte
     }
 
     fun addWallet(userId: String, walletName: String, initialAmt: String) = viewModelScope.launch {
-        when(val result = interactors.addWallet(userId, walletName, initialAmt)){
+        when (val result = interactors.addWallet(userId, walletName, initialAmt)) {
             is Success -> {
                 isAdded.value = true
             }
