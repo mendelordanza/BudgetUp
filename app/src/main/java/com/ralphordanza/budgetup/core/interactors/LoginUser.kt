@@ -2,8 +2,8 @@ package com.ralphordanza.budgetup.core.interactors
 
 import com.google.firebase.auth.AuthResult
 import com.ralphordanza.budgetup.core.data.repository.UserRepository
-import com.ralphordanza.budgetup.core.domain.Failed
-import com.ralphordanza.budgetup.core.domain.Result
+import com.ralphordanza.budgetup.core.domain.model.Failed
+import com.ralphordanza.budgetup.core.domain.model.Result
 import java.lang.Exception
 import javax.inject.Inject
 

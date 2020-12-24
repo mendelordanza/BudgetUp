@@ -27,7 +27,7 @@
         tools:layout="@layout/fragment_transactions">
         <argument
             android:name="walletData"
-            app:argType="com.ralphordanza.budgetup.core.domain.Wallet" />
+            app:argType="com.ralphordanza.budgetup.core.domain.model.Wallet" />
         <action
             android:id="@+id/action_transactionsFragment_to_addTransactionFragment"
             app:destination="@id/addTransactionFragment" />

@@ -12,7 +12,6 @@ import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentHomeBinding
-import com.ralphordanza.budgetup.framework.ui.wallets.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,7 +52,7 @@ class HomeFragment : Fragment() {
     private fun loadWallets() {
         walletViewModel.getSessionManager().userIdFlow.asLiveData()
             .observe(viewLifecycleOwner, Observer { userId ->
-                Log.d("USERID", "check: ${userId}")
+                walletViewModel.getTotal(userId)
                 walletViewModel.getWallets(userId)
             })
     }
@@ -73,6 +72,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeData() {
+        walletViewModel.getTotal().observe(viewLifecycleOwner, Observer {
+            binding.txtAmount.text = it.toString()
+        })
+
         walletViewModel.getWallets().observe(viewLifecycleOwner, Observer { wallets ->
             walletAdapter.submitList(wallets)
         })

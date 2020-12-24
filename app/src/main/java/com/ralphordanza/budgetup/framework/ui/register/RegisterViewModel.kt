@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ralphordanza.budgetup.core.domain.Failed
-import com.ralphordanza.budgetup.core.domain.Success
-import com.ralphordanza.budgetup.core.domain.User
+import com.ralphordanza.budgetup.core.domain.model.Failed
+import com.ralphordanza.budgetup.core.domain.model.Success
+import com.ralphordanza.budgetup.core.domain.model.User
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import kotlinx.coroutines.launch
 

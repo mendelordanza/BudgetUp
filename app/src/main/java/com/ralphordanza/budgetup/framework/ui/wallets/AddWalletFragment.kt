@@ -10,10 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.database.FirebaseDatabase
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.FragmentAddWalletBinding
-import com.ralphordanza.budgetup.core.domain.Wallet
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,15 +1,12 @@
-package com.ralphordanza.budgetup.core.domain
+package com.ralphordanza.budgetup.core.domain.network
 
-import android.os.Parcelable
 import com.google.firebase.firestore.DocumentId
-import kotlinx.android.parcel.Parcelize
 
-@Parcelize
-data class Wallet(
+data class WalletDto(
     @DocumentId
     val id: String,
     val name: String,
     val amount: String
-) : Parcelable {
+) {
     constructor() : this("", "", "")
 }

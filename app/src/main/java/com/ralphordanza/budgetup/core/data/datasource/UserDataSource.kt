@@ -2,9 +2,8 @@ package com.ralphordanza.budgetup.core.data.datasource
 
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentReference
-import com.ralphordanza.budgetup.core.domain.Result
-import com.ralphordanza.budgetup.core.domain.User
+import com.ralphordanza.budgetup.core.domain.model.Result
+import com.ralphordanza.budgetup.core.domain.model.User
 
 interface UserDataSource {
 

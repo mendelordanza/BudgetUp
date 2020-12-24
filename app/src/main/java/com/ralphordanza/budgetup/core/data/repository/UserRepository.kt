@@ -1,10 +1,7 @@
 package com.ralphordanza.budgetup.core.data.repository
 
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.firestore.DocumentReference
 import com.ralphordanza.budgetup.core.data.datasource.UserDataSource
-import com.ralphordanza.budgetup.core.domain.Result
-import com.ralphordanza.budgetup.core.domain.User
+import com.ralphordanza.budgetup.core.domain.model.User
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(private val userDataSource: UserDataSource) {
