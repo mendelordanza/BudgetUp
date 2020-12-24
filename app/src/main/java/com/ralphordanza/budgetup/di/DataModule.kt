@@ -28,6 +28,11 @@ object DataModule {
     }
 
     @Provides
+    fun provideLoginAsGuest(userRepository: UserRepository) : LoginAsGuest {
+        return LoginAsGuest(userRepository)
+    }
+
+    @Provides
     fun provideLogoutUser(userRepository: UserRepository) : LogoutUser {
         return LogoutUser(userRepository)
     }
@@ -48,6 +53,7 @@ object DataModule {
         saveToFirestore: SaveToFirestore,
         loginUser: LoginUser,
         logoutUser: LogoutUser,
+        loginAsGuest: LoginAsGuest,
         getWallets: GetWallets,
         addWallet: AddWallet
     ) : Interactors {
@@ -55,6 +61,7 @@ object DataModule {
             registerUser,
             saveToFirestore,
             loginUser,
+            loginAsGuest,
             logoutUser,
             getWallets,
             addWallet

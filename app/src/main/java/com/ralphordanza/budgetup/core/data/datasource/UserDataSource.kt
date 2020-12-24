@@ -8,11 +8,13 @@ import com.ralphordanza.budgetup.core.domain.User
 
 interface UserDataSource {
 
-    suspend fun register(user: User): Result<AuthResult>
+    suspend fun register(email: String, password: String): Result<AuthResult>
 
-    suspend fun saveToFirestore(user: User): Result<DocumentReference>
+    suspend fun saveToFirestore(user: User): Boolean
 
     suspend fun login(email: String, password: String): Result<AuthResult>
+
+    suspend fun loginAsGuest(): Result<AuthResult>
 
     suspend fun logout(): FirebaseUser?
 }

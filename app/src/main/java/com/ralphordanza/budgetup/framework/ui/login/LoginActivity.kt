@@ -36,6 +36,10 @@ class LoginActivity : AppCompatActivity() {
             loginUser()
         }
 
+        binding.btnGuest.setOnClickListener {
+            loginAsGuest()
+        }
+
         binding.btnRegister.setOnClickListener {
             start<RegisterActivity>()
         }
@@ -45,16 +49,22 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
     }
 
+    private fun loginAsGuest(){
+        loginViewModel.loginAsGuest()
+    }
+
     private fun observeData(){
         loginViewModel.getIsLoading().observe(this, Observer { loading ->
             binding.progressBar.isVisible = loading
+            binding.btnLogin.isVisible = !loading
+            binding.btnGuest.isVisible = !loading
         })
 
         loginViewModel.getLoginResult().observe(this, Observer { result ->
             //user.uid
             result.user?.let { user ->
                 start<MainActivity>()
-                finish()
+                finishAffinity()
             }
         })
 

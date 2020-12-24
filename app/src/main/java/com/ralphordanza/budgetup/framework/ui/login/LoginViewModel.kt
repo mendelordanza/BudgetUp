@@ -1,6 +1,5 @@
 package com.ralphordanza.budgetup.framework.ui.login
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +9,16 @@ import com.google.firebase.auth.AuthResult
 import com.ralphordanza.budgetup.core.domain.Failed
 import com.ralphordanza.budgetup.core.domain.Success
 import com.ralphordanza.budgetup.core.interactors.Interactors
+import com.ralphordanza.budgetup.framework.utils.SessionManager
 import kotlinx.coroutines.launch
 
-class LoginViewModel @ViewModelInject constructor(private val interactors: Interactors) :
+class LoginViewModel @ViewModelInject constructor(
+    private val interactors: Interactors,
+    private val sessionManager: SessionManager
+) :
     ViewModel() {
+
+    fun getSessionManager() = sessionManager
 
     private val loginResult = MutableLiveData<AuthResult>()
     fun getLoginResult(): LiveData<AuthResult> = loginResult
@@ -29,7 +34,24 @@ class LoginViewModel @ViewModelInject constructor(private val interactors: Inter
 
     fun login(email: String, password: String) = viewModelScope.launch {
         isLoading.value = true
-        when(val result = interactors.loginUser(email, password)){
+        when (val result = interactors.loginUser(email, password)) {
+            is Success -> {
+                result.data.user?.let {
+                    getSessionManager().storeUserId(it.uid)
+                }
+                isLoading.value = false
+                loginResult.postValue(result.data)
+            }
+            is Failed -> {
+                isLoading.value = false
+                message.value = result.message
+            }
+        }
+    }
+
+    fun loginAsGuest() = viewModelScope.launch {
+        isLoading.value = true
+        when (val result = interactors.loginAsGuest()) {
             is Success -> {
                 isLoading.value = false
                 loginResult.postValue(result.data)

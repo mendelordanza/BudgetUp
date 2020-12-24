@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.framework.ui.home
+package com.ralphordanza.budgetup.framework.ui.wallets
 
 import android.os.Bundle
 import android.util.Log
@@ -8,14 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.databinding.FragmentHomeBinding
-import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
-import com.ralphordanza.budgetup.framework.ui.wallets.WalletAdapter
-import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
+import com.ralphordanza.budgetup.framework.ui.wallets.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -49,16 +46,24 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        walletViewModel.getWallets("OOH92EP8RrjjvDFX2kiN")
+        loadWallets()
         observeData()
     }
 
+    private fun loadWallets() {
+        walletViewModel.getSessionManager().userIdFlow.asLiveData()
+            .observe(viewLifecycleOwner, Observer { userId ->
+                Log.d("USERID", "check: ${userId}")
+                walletViewModel.getWallets(userId)
+            })
+    }
+
     private fun setupRecyclerView() {
-        walletAdapter = WalletAdapter{
+        walletAdapter = WalletAdapter {
             //On click wallet item
             val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(
-                    it
-                )
+                it
+            )
             findNavController().navigate(action)
         }
         binding.rvWallets.apply {
@@ -67,7 +72,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun observeData(){
+    private fun observeData() {
         walletViewModel.getWallets().observe(viewLifecycleOwner, Observer { wallets ->
             walletAdapter.submitList(wallets)
         })

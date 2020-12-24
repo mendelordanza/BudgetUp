@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.database.FirebaseDatabase
 import com.ralphordanza.budgetup.R
@@ -68,17 +69,20 @@ class AddWalletFragment : Fragment() {
 
     private fun attachActions() {
         binding.btnAdd.setOnClickListener {
-            walletViewModel.addWallet(
-                "OOH92EP8RrjjvDFX2kiN",
-                binding.etName.text.toString(),
-                binding.etAmount.text.toString()
-            )
+            walletViewModel.getSessionManager().userIdFlow.asLiveData()
+                .observe(viewLifecycleOwner, Observer {
+                    walletViewModel.addWallet(
+                        it,
+                        binding.etName.text.toString(),
+                        binding.etAmount.text.toString()
+                    )
+                })
         }
     }
 
     private fun observeData() {
         walletViewModel.getIsAdded().observe(viewLifecycleOwner, Observer { walletAdded ->
-            if(walletAdded){
+            if (walletAdded) {
                 findNavController().popBackStack()
             }
         })

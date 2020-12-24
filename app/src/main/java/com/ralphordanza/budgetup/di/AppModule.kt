@@ -1,5 +1,6 @@
 package com.ralphordanza.budgetup.di
 
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.core.data.datasource.TransactionDataSource
@@ -11,15 +12,23 @@ import com.ralphordanza.budgetup.core.data.implementation.WalletDataSourceImpl
 import com.ralphordanza.budgetup.core.data.repository.TransactionRepository
 import com.ralphordanza.budgetup.core.data.repository.UserRepository
 import com.ralphordanza.budgetup.core.data.repository.WalletRepository
+import com.ralphordanza.budgetup.framework.utils.SessionManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideSessionManager(@ApplicationContext context: Context) : SessionManager{
+        return SessionManager(context)
+    }
 
     @Provides
     @Singleton
