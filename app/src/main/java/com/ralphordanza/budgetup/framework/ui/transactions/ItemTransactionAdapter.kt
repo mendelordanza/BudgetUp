@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemTransactionBinding
-import com.ralphordanza.budgetup.core.domain.Transaction
+import com.ralphordanza.budgetup.core.domain.model.Transaction
 
 class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction) -> Unit) :
     ListAdapter<Transaction, ItemTransactionAdapter.ViewHolder>(DiffCallback()) {

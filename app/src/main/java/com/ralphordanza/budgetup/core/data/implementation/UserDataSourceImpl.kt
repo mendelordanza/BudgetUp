@@ -3,13 +3,12 @@ package com.ralphordanza.budgetup.core.data.implementation
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.core.data.datasource.UserDataSource
-import com.ralphordanza.budgetup.core.domain.Failed
-import com.ralphordanza.budgetup.core.domain.Result
-import com.ralphordanza.budgetup.core.domain.Success
-import com.ralphordanza.budgetup.core.domain.User
+import com.ralphordanza.budgetup.core.domain.model.Failed
+import com.ralphordanza.budgetup.core.domain.model.Result
+import com.ralphordanza.budgetup.core.domain.model.Success
+import com.ralphordanza.budgetup.core.domain.model.User
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
 import java.lang.Exception
 import javax.inject.Inject
@@ -51,7 +50,7 @@ class UserDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun loginAsGuest(): Result<AuthResult>  {
+    override suspend fun loginAsGuest(): Result<AuthResult> {
         return try{
             val task = firebaseAuth.signInAnonymously()
             Success(awaitTaskResult(task))

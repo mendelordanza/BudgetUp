@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
-import com.ralphordanza.budgetup.core.domain.Failed
-import com.ralphordanza.budgetup.core.domain.Success
+import com.ralphordanza.budgetup.core.domain.model.Failed
+import com.ralphordanza.budgetup.core.domain.model.Success
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import com.ralphordanza.budgetup.framework.utils.SessionManager
 import kotlinx.coroutines.launch

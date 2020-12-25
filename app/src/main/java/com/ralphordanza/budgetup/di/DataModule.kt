@@ -38,13 +38,18 @@ object DataModule {
     }
 
     @Provides
-    fun provideGetWallets(walletReposiroy: WalletRepository) : GetWallets {
-        return GetWallets(walletReposiroy)
+    fun provideGetWallets(walletRepository: WalletRepository) : GetWallets {
+        return GetWallets(walletRepository)
     }
 
     @Provides
-    fun provideAddWallet(walletReposiroy: WalletRepository) : AddWallet {
-        return AddWallet(walletReposiroy)
+    fun provideGetTotal(walletRepository: WalletRepository) : GetTotal {
+        return GetTotal(walletRepository)
+    }
+
+    @Provides
+    fun provideAddWallet(walletRepository: WalletRepository) : AddWallet {
+        return AddWallet(walletRepository)
     }
 
     @Provides
@@ -55,6 +60,7 @@ object DataModule {
         logoutUser: LogoutUser,
         loginAsGuest: LoginAsGuest,
         getWallets: GetWallets,
+        getTotal: GetTotal,
         addWallet: AddWallet
     ) : Interactors {
         return Interactors(
@@ -64,6 +70,7 @@ object DataModule {
             loginAsGuest,
             logoutUser,
             getWallets,
+            getTotal,
             addWallet
         )
     }
