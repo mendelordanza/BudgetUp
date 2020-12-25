@@ -4,4 +4,5 @@ import com.ralphordanza.budgetup.core.data.repository.UserRepository
 import javax.inject.Inject
 
 class LogoutUser @Inject constructor(private val userRepository: UserRepository) {
+    suspend operator fun invoke() = userRepository.logout()
 }

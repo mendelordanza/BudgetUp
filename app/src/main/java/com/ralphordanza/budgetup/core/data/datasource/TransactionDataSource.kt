@@ -1,6 +1,6 @@
 package com.ralphordanza.budgetup.core.data.datasource
 
-import com.ralphordanza.budgetup.core.domain.Transaction
+import com.ralphordanza.budgetup.core.domain.model.Transaction
 
 interface TransactionDataSource {
 

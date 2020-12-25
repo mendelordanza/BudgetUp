@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemWalletBinding
-import com.ralphordanza.budgetup.core.domain.Wallet
+import com.ralphordanza.budgetup.core.domain.model.Wallet
 
 class WalletAdapter(
     private val onClick: (wallet: Wallet) -> Unit

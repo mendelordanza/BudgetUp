@@ -1,18 +1,19 @@
 package com.ralphordanza.budgetup.core.data.datasource
 
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.firestore.DocumentReference
-import com.ralphordanza.budgetup.core.domain.Result
-import com.ralphordanza.budgetup.core.domain.User
+import com.google.firebase.auth.FirebaseUser
+import com.ralphordanza.budgetup.core.domain.model.Result
+import com.ralphordanza.budgetup.core.domain.model.User
 
 interface UserDataSource {
 
-    suspend fun register(user: User): Result<AuthResult>
+    suspend fun register(email: String, password: String): Result<AuthResult>
 
-    suspend fun saveToFirestore(user: User): Result<DocumentReference>
+    suspend fun saveToFirestore(user: User): Boolean
 
     suspend fun login(email: String, password: String): Result<AuthResult>
 
-    suspend fun logout()
+    suspend fun loginAsGuest(): Result<AuthResult>
+
+    suspend fun logout(): FirebaseUser?
 }

@@ -35,10 +35,6 @@ class AddTransactionFragment : Fragment() {
     }
 
     private fun attachActions(){
-        binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
         binding.etAmount.setOnClickListener {
             toast("Redirect to calculator")
         }

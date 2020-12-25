@@ -1,4 +1,4 @@
-package com.ralphordanza.budgetup.core.domain
+package com.ralphordanza.budgetup.core.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

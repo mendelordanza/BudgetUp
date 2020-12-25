@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemTransactionHeaderBinding
-import com.ralphordanza.budgetup.core.domain.Transaction
-import com.ralphordanza.budgetup.core.domain.TransactionSection
+import com.ralphordanza.budgetup.core.domain.model.Transaction
+import com.ralphordanza.budgetup.core.domain.model.TransactionSection
 
 class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -> Unit) :
     ListAdapter<TransactionSection, HeaderTransactionAdapter.ViewHolder>(DiffCallback()) {

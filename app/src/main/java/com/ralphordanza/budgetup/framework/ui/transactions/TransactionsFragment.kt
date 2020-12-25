@@ -5,12 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentTransactionsBinding
-import com.ralphordanza.budgetup.core.domain.Transaction
-import com.ralphordanza.budgetup.core.domain.TransactionSection
+import com.ralphordanza.budgetup.core.domain.model.Transaction
+import com.ralphordanza.budgetup.core.domain.model.TransactionSection
 import splitties.toast.toast
 
 class TransactionsFragment : Fragment() {
@@ -39,18 +38,11 @@ class TransactionsFragment : Fragment() {
         setupUi()
         setupTransactionList()
         showDummyList()
-        attachActions()
     }
 
     private fun setupUi() {
         binding.txtWallet.text = args.walletData.name
         binding.txtAmount.text = args.walletData.amount
-    }
-
-    private fun attachActions() {
-        binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
     }
 
     private fun setupTransactionList() {

@@ -1,6 +1,7 @@
-package com.ralphordanza.budgetup.core.domain
+package com.ralphordanza.budgetup.core.domain.model
 
 import android.os.Parcelable
+import com.google.firebase.firestore.DocumentId
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
