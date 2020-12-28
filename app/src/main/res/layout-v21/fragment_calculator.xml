@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_calculator"
                 android:backgroundTint="@color/colorAccent"
-                android:text="@string/c" />
+                android:text="C" />
 
             <Button
                 android:id="@+id/btn_par"

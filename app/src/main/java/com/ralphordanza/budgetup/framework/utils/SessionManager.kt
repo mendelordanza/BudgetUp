@@ -1,6 +1,7 @@
 package com.ralphordanza.budgetup.framework.utils
 
 import android.content.Context
+import androidx.datastore.preferences.core.clear
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
@@ -18,6 +19,12 @@ class SessionManager @Inject constructor(context: Context) {
     suspend fun storeUserId(userId: String){
         dataStore.edit {
             it[USER_ID] = userId
+        }
+    }
+
+    suspend fun clearSession(){
+        dataStore.edit {
+            it.clear()
         }
     }
 

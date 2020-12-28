@@ -50,7 +50,9 @@ class AddTransactionFragment : Fragment() {
 
     private fun attachActions(){
         binding.etAmount.setOnClickListener {
-            val action = AddTransactionFragmentDirections.actionAddTransactionFragmentToCalculatorFragment()
+            val action = AddTransactionFragmentDirections.actionAddTransactionFragmentToCalculatorFragment(
+                binding.etAmount.text.toString()
+            )
             findNavController().navigate(action)
         }
     }

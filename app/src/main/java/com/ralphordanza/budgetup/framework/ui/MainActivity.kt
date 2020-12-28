@@ -2,6 +2,7 @@ package com.ralphordanza.budgetup.framework.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
+import com.ralphordanza.budgetup.framework.ui.calculator.CalculatorFragment
 import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.wallets.HomeFragmentDirections
@@ -70,6 +72,12 @@ class MainActivity : AppCompatActivity() {
                     binding.fab.imageResource = R.drawable.ic_transaction_white
                     binding.fab.show()
                 }
+                R.id.calculatorFragment -> {
+                    supportActionBar?.show()
+                    supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_check)
+                    hideBottomAppBar()
+                    binding.fab.hide()
+                }
                 R.id.addWalletFragment, R.id.addTransactionFragment -> {
                     supportActionBar?.show()
                     hideBottomAppBar()
@@ -88,7 +96,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        return if(navController.currentDestination?.id == R.id.calculatorFragment){
+            setResultFromCalculator()
+            true
+        } else{
+            navController.navigateUp() || super.onSupportNavigateUp()
+        }
+    }
+
+    override fun onBackPressed() {
+        return if(navController.currentDestination?.id == R.id.calculatorFragment){
+            setResultFromCalculator()
+        } else{
+            super.onBackPressed()
+        }
+    }
+
+    private fun setResultFromCalculator(){
+        val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+        val frag = fragment?.childFragmentManager?.fragments?.get(0) as CalculatorFragment
+        frag.setResult()
     }
 
     private fun attachActions(){

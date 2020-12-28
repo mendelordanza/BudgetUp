@@ -11,4 +11,6 @@ class TransactionRepository @Inject constructor(private val transactionDataSourc
     suspend fun updateTransaction(transaction: Transaction) = transactionDataSource.updateTransaction(transaction)
 
     suspend fun deleteTransaction(transaction: Transaction) = transactionDataSource.deleteTransaction(transaction)
+
+    suspend fun calculate(expression: String) = transactionDataSource.calculate(expression)
 }

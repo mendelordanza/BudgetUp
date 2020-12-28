@@ -64,6 +64,8 @@ class LoginViewModel @ViewModelInject constructor(
     }
 
     fun logout() = viewModelScope.launch {
+        //if result is null, logout is successful
         logout.value = interactors.logoutUser() == null
+        getSessionManager().clearSession()
     }
 }

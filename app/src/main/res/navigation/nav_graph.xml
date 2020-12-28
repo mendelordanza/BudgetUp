@@ -50,5 +50,10 @@
         android:id="@+id/calculatorFragment"
         android:name="com.ralphordanza.budgetup.framework.ui.calculator.CalculatorFragment"
         android:label="fragment_calculator"
-        tools:layout="@layout/fragment_calculator" />
+        tools:layout="@layout/fragment_calculator" >
+        <argument
+            android:name="amount"
+            app:argType="string"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>
