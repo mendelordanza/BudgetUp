@@ -29,6 +29,8 @@ class LoginActivity : AppCompatActivity() {
 
         attachActions()
         observeData()
+
+        binding.imgLogo
     }
 
     private fun attachActions() {

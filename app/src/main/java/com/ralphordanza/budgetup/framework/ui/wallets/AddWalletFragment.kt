@@ -81,7 +81,7 @@ class AddWalletFragment : Fragment() {
     private fun observeData() {
         walletViewModel.getIsAdded().observe(viewLifecycleOwner, Observer { walletAdded ->
             if (walletAdded) {
-                findNavController().popBackStack()
+                findNavController().navigateUp()
             }
         })
     }

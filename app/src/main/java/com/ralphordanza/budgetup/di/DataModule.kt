@@ -1,5 +1,6 @@
 package com.ralphordanza.budgetup.di
 
+import com.ralphordanza.budgetup.core.data.repository.TransactionRepository
 import com.ralphordanza.budgetup.core.data.repository.UserRepository
 import com.ralphordanza.budgetup.core.data.repository.WalletRepository
 import com.ralphordanza.budgetup.core.interactors.*
@@ -53,6 +54,11 @@ object DataModule {
     }
 
     @Provides
+    fun provideCalculatorCompute(transactionRepository: TransactionRepository) : CalculatorCompute {
+        return CalculatorCompute(transactionRepository)
+    }
+
+    @Provides
     fun provideInteractors(
         registerUser: RegisterUser,
         saveToFirestore: SaveToFirestore,
@@ -61,7 +67,8 @@ object DataModule {
         loginAsGuest: LoginAsGuest,
         getWallets: GetWallets,
         getTotal: GetTotal,
-        addWallet: AddWallet
+        addWallet: AddWallet,
+        calculatorCompute: CalculatorCompute
     ) : Interactors {
         return Interactors(
             registerUser,
@@ -71,7 +78,8 @@ object DataModule {
             logoutUser,
             getWallets,
             getTotal,
-            addWallet
+            addWallet,
+            calculatorCompute
         )
     }
 }

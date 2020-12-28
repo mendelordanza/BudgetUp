@@ -9,4 +9,6 @@
     <string name="add">ADD</string>
     <string name="initial_amount">Initial Amount</string>
     <string name="wallet_name">Wallet Name</string>
+    <string name="calculator">Calculator</string>
+    <string name="c">C</string>
 </resources>

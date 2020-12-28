@@ -1,15 +1,21 @@
 package com.ralphordanza.budgetup.framework.ui.transactions
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.FragmentAddTransactionBinding
 import splitties.toast.toast
+
+const val REQUEST_AMOUNT = "request_amount"
+const val AMOUNT_KEY = "amount_key"
 
 class AddTransactionFragment : Fragment() {
     companion object {
@@ -32,11 +38,22 @@ class AddTransactionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         attachActions()
+        listenAmount()
+    }
+
+    private fun listenAmount(){
+        setFragmentResultListener(REQUEST_AMOUNT) { _, bundle ->
+            val result = bundle.getString(AMOUNT_KEY)
+            binding.etAmount.setText(result)
+        }
     }
 
     private fun attachActions(){
         binding.etAmount.setOnClickListener {
-            toast("Redirect to calculator")
+            val action = AddTransactionFragmentDirections.actionAddTransactionFragmentToCalculatorFragment(
+                binding.etAmount.text.toString()
+            )
+            findNavController().navigate(action)
         }
     }
 }

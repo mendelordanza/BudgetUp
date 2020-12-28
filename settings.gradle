@@ -1,2 +1,3 @@
+include ':MathParser.org-mXparser-v.4.4.0-jdk8'
 include ':app'
 rootProject.name = "BudgetUp"
