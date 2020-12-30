@@ -25,8 +25,8 @@ class WalletViewModel @ViewModelInject constructor(
     private val wallets = MutableLiveData<List<Wallet>>()
     fun getWallets(): LiveData<List<Wallet>> = wallets
 
-    private val total = MutableLiveData<Int>()
-    fun getTotal(): LiveData<Int> = total
+    private val total = MutableLiveData<Double>()
+    fun getTotal(): LiveData<Double> = total
 
     private val isAdded = MutableLiveData<Boolean>()
     fun getIsAdded(): LiveData<Boolean> = isAdded

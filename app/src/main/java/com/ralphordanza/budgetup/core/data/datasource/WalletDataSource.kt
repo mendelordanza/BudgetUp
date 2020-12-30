@@ -8,7 +8,7 @@ interface WalletDataSource {
 
     suspend fun getWallets(userId: String): List<Wallet>
 
-    suspend fun getTotal(userId: String): Int
+    suspend fun getTotal(userId: String): Double
 
     suspend fun addWallet(userId: String, walletName: String, initialAmt: String): Result<DocumentReference>
 

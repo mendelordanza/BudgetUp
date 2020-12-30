@@ -30,8 +30,8 @@ class WalletDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun getTotal(userId: String): Int {
-        var total = 0
+    override suspend fun getTotal(userId: String): Double {
+        var total = 0.0
         walletDtoMapper.fromEntityList(
             firebaseFirestore.collection("users")
                 .document(userId)
@@ -41,7 +41,7 @@ class WalletDataSourceImpl @Inject constructor(
                 .await()
                 .toObjects(WalletDto::class.java)
         ).forEach {
-            total += it.amount.toInt()
+            total += it.amount.toDouble()
         }
         return total
     }
