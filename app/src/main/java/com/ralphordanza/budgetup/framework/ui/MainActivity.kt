@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
     private fun setResultFromCalculator(){
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val frag = fragment?.childFragmentManager?.fragments?.get(0) as CalculatorFragment
-        frag.setResult()
+        frag.checkResult()
     }
 
     private fun attachActions(){
