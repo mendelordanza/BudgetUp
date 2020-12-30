@@ -174,11 +174,12 @@ class CalculatorFragment : Fragment() {
         calculatorViewModel.getResult().observe(viewLifecycleOwner, Observer {
             binding.etDisplay.setText(it)
             binding.etDisplay.setSelection(it.length)
+            setResult()
         })
     }
 
     //User clicked done
-    fun setResult() {
+    fun checkResult() {
         if (binding.etDisplay.text.toString().contains("+") ||
             binding.etDisplay.text.toString().contains("-") ||
             binding.etDisplay.text.toString().contains("×") ||
@@ -187,12 +188,15 @@ class CalculatorFragment : Fragment() {
             calculatorViewModel.compute(binding.etDisplay.text.toString())
         }
         else{
-            val result = Bundle().apply {
-                putString(AMOUNT_KEY, binding.etDisplay.text.toString())
-            }
-            setFragmentResult(REQUEST_AMOUNT, result)
-            findNavController().navigateUp()
-
+            setResult()
         }
+    }
+
+    private fun setResult(){
+        val result = Bundle().apply {
+            putString(AMOUNT_KEY, binding.etDisplay.text.toString())
+        }
+        setFragmentResult(REQUEST_AMOUNT, result)
+        findNavController().navigateUp()
     }
 }

@@ -62,8 +62,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_calculator"
-                android:backgroundTint="@color/colorAccent"
-                android:text="@string/c" />
+                android:text="@string/c"
+                app:backgroundTint="@color/red_700" />
 
             <Button
                 android:id="@+id/btn_par"
@@ -247,13 +247,16 @@
                 android:background="@drawable/bg_calculator"
                 android:text="." />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_equal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:background="@drawable/bg_calculator"
-                android:text="=" />
+                android:elevation="2dp"
+                android:src="@drawable/ic_check"
+                android:tint="@color/white"
+                app:backgroundTint="@color/colorAccent" />
         </TableRow>
 
     </TableLayout>
