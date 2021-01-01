@@ -1,7 +1,6 @@
-package com.ralphordanza.budgetup.framework.ui.wallets
+package com.ralphordanza.budgetup.framework.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,9 @@ import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentHomeBinding
+import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
+import com.ralphordanza.budgetup.framework.ui.wallets.WalletAdapter
+import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -6,7 +6,7 @@
     app:startDestination="@id/homeFragment">
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.ralphordanza.budgetup.framework.ui.wallets.HomeFragment"
+        android:name="com.ralphordanza.budgetup.framework.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -36,7 +36,11 @@
         android:id="@+id/addWalletFragment"
         android:name="com.ralphordanza.budgetup.framework.ui.wallets.AddWalletFragment"
         android:label="Add Wallet"
-        tools:layout="@layout/fragment_add_wallet" />
+        tools:layout="@layout/fragment_add_wallet" >
+        <action
+            android:id="@+id/action_addWalletFragment_to_calculatorFragment"
+            app:destination="@id/calculatorFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addTransactionFragment"
         android:name="com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragment"

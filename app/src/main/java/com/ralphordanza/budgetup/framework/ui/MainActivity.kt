@@ -14,7 +14,7 @@ import com.ralphordanza.budgetup.databinding.ActivityMainBinding
 import com.ralphordanza.budgetup.framework.ui.calculator.CalculatorFragment
 import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentDirections
-import com.ralphordanza.budgetup.framework.ui.wallets.HomeFragmentDirections
+import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.activities.start
