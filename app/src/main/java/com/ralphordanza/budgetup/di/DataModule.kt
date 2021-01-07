@@ -54,6 +54,11 @@ object DataModule {
     }
 
     @Provides
+    fun provideDeleteWallet(walletRepository: WalletRepository) : DeleteWallet {
+        return DeleteWallet(walletRepository)
+    }
+
+    @Provides
     fun provideCalculatorCompute(transactionRepository: TransactionRepository) : CalculatorCompute {
         return CalculatorCompute(transactionRepository)
     }
@@ -68,6 +73,7 @@ object DataModule {
         getWallets: GetWallets,
         getTotal: GetTotal,
         addWallet: AddWallet,
+        deleteWallet: DeleteWallet,
         calculatorCompute: CalculatorCompute
     ) : Interactors {
         return Interactors(
@@ -79,6 +85,7 @@ object DataModule {
             getWallets,
             getTotal,
             addWallet,
+            deleteWallet,
             calculatorCompute
         )
     }

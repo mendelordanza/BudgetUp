@@ -14,5 +14,5 @@ interface WalletDataSource {
 
     suspend fun adjustWallet(wallet: Wallet)
 
-    suspend fun deleteWallet(wallet: Wallet)
+    suspend fun deleteWallet(userId: String, wallet: Wallet)
 }

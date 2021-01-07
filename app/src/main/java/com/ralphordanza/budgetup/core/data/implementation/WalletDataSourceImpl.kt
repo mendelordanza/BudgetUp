@@ -8,6 +8,7 @@ import com.ralphordanza.budgetup.core.domain.model.Success
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.core.domain.network.WalletDtoMapper
+import com.ralphordanza.budgetup.framework.extensions.awaitTaskCompletable
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -71,7 +72,11 @@ class WalletDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteWallet(wallet: Wallet) {
-        TODO("Not yet implemented")
+    override suspend fun deleteWallet(userId: String, wallet: Wallet) {
+        firebaseFirestore.collection("users")
+            .document(userId)
+            .collection("wallets")
+            .document(wallet.id)
+            .delete()
     }
 }
