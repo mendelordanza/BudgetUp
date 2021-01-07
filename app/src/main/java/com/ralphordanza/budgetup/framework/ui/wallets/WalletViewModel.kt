@@ -18,8 +18,6 @@ class WalletViewModel @ViewModelInject constructor(
 ) :
     ViewModel() {
 
-    var totalAmountHolder: Long = 0
-
     fun getSessionManager() = sessionManager
 
     private val wallets = MutableLiveData<List<Wallet>>()
@@ -38,6 +36,10 @@ class WalletViewModel @ViewModelInject constructor(
         wallets.postValue(interactors.getWallets(userId))
     }
 
+    fun getTotal(userId: String) = viewModelScope.launch {
+        total.postValue(interactors.getTotal(userId))
+    }
+
     fun addWallet(userId: String, walletName: String, initialAmt: String) = viewModelScope.launch {
         when (val result = interactors.addWallet(userId, walletName, initialAmt)) {
             is Success -> {
@@ -50,7 +52,7 @@ class WalletViewModel @ViewModelInject constructor(
         }
     }
 
-    fun getTotal(userId: String) = viewModelScope.launch {
-        total.postValue(interactors.getTotal(userId))
+    fun deleteWallet(userId: String, wallet: Wallet) = viewModelScope.launch{
+        interactors.deleteWallet(userId, wallet)
     }
 }

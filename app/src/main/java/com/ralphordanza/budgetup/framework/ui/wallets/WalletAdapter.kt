@@ -31,6 +31,7 @@ class WalletAdapter(
             binding.root.setOnClickListener {
                 onClick(wallet)
             }
+            binding.root.isLongClickable = true
         }
     }
 
