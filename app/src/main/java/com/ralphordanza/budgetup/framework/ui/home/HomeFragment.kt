@@ -63,18 +63,30 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        walletAdapter = WalletAdapter{
+        walletAdapter = WalletAdapter({
             //On click wallet item
             val action = HomeFragmentDirections.actionHomeFragmentToTransactionsFragment(
                 it
             )
             findNavController().navigate(action)
-        }
+        }, { type, wallet ->
+            when(type){
+                0 -> { //Edit
+
+                }
+                1 -> { //Delete
+                    walletViewModel.getSessionManager().userIdFlow.asLiveData()
+                        .observe(viewLifecycleOwner, Observer { id ->
+                            walletViewModel.deleteWallet(id, wallet)
+                            loadWallets()
+                        })
+                }
+            }
+        })
         binding.rvWallets.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = walletAdapter
         }
-        registerForContextMenu(binding.rvWallets)
     }
 
     private fun observeData() {
@@ -85,31 +97,5 @@ class HomeFragment : Fragment() {
         walletViewModel.getWallets().observe(viewLifecycleOwner, Observer { wallets ->
             walletAdapter.submitList(wallets)
         })
-    }
-
-    override fun onCreateContextMenu(
-        menu: ContextMenu,
-        v: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        val inflater = activity?.menuInflater as MenuInflater
-        inflater.inflate(R.menu.recycler_menu, menu)
-    }
-
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.recycler_edit -> {
-                //TODO Edit Wallet
-                toast("Edit")
-            }
-            R.id.recycler_delete -> {
-                walletViewModel.getSessionManager().userIdFlow.asLiveData()
-                    .observe(viewLifecycleOwner, Observer { id ->
-                        walletViewModel.deleteWallet(id, walletAdapter.currentList[item.order])
-                        loadWallets()
-                    })
-            }
-        }
-        return super.onContextItemSelected(item)
     }
 }

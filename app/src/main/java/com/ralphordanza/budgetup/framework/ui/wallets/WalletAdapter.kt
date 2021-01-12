@@ -1,7 +1,6 @@
 package com.ralphordanza.budgetup.framework.ui.wallets
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,7 +8,8 @@ import com.ralphordanza.budgetup.databinding.ItemWalletBinding
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 
 class WalletAdapter(
-    private val onClick: (wallet: Wallet) -> Unit
+    private val onClick: (wallet: Wallet) -> Unit,
+    private val onMenuClick: (Int, Wallet) -> Unit
 ) : ListAdapter<Wallet, WalletAdapter.ViewHolder>(DiffCallback()) {
     private lateinit var binding: ItemWalletBinding
 
@@ -24,7 +24,7 @@ class WalletAdapter(
     }
 
     inner class ViewHolder(private val binding: ItemWalletBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
         fun bind(wallet: Wallet) {
             binding.txtName.text = wallet.name
             binding.txtAmount.text = wallet.amount
@@ -32,6 +32,30 @@ class WalletAdapter(
                 onClick(wallet)
             }
             binding.root.isLongClickable = true
+            binding.root.setOnCreateContextMenuListener(this)
+        }
+
+        override fun onCreateContextMenu(
+            menu: ContextMenu?,
+            v: View?,
+            menuInfo: ContextMenu.ContextMenuInfo?
+        ) {
+            val edit = menu?.add(Menu.NONE, 0, 0, "Edit")
+            val delete =menu?.add(Menu.NONE, 1, 0, "Delete")
+            edit?.setOnMenuItemClickListener(onMenuClick)
+            delete?.setOnMenuItemClickListener(onMenuClick)
+        }
+
+        val onMenuClick = MenuItem.OnMenuItemClickListener {
+            when(it.itemId){
+                0 -> {
+                    onMenuClick(0, getItem(adapterPosition))
+                }
+                1 -> {
+                    onMenuClick(1, getItem(adapterPosition))
+                }
+            }
+            true
         }
     }
 
@@ -45,5 +69,4 @@ class WalletAdapter(
         }
 
     }
-
 }
