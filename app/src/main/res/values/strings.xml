@@ -11,4 +11,5 @@
     <string name="wallet_name">Wallet Name</string>
     <string name="calculator">Calculator</string>
     <string name="c">C</string>
+    <string name="note_optional">Note (Optional)</string>
 </resources>

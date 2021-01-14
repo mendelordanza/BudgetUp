@@ -7,10 +7,9 @@ import kotlinx.android.parcel.Parcelize
 data class Transaction(
     val id: String,
     val date: String,
-    val category: String,
     val type: String,
-    val amount: Double,
-    val wallet: String,
+    val amount: String,
+    val walletId: String,
     val note: String = ""
 ) : Parcelable
 

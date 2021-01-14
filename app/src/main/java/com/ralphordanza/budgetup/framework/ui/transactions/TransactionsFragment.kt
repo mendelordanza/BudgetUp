@@ -1,17 +1,23 @@
 package com.ralphordanza.budgetup.framework.ui.transactions
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentTransactionsBinding
 import com.ralphordanza.budgetup.core.domain.model.Transaction
 import com.ralphordanza.budgetup.core.domain.model.TransactionSection
+import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
 
+@AndroidEntryPoint
 class TransactionsFragment : Fragment() {
 
     companion object {
@@ -24,6 +30,8 @@ class TransactionsFragment : Fragment() {
     private var _binding: FragmentTransactionsBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: TransactionViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,9 +43,13 @@ class TransactionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         setupUi()
         setupTransactionList()
-        showDummyList()
+        viewModel.getSessionManager().userIdFlow.asLiveData().observe(viewLifecycleOwner, Observer {
+            viewModel.loadTransactions(it)
+        })
+        observeData()
     }
 
     private fun setupUi() {
@@ -48,7 +60,7 @@ class TransactionsFragment : Fragment() {
     private fun setupTransactionList() {
         headerTransactionAdapter = HeaderTransactionAdapter { trans ->
             //TODO onClick
-            toast(trans.wallet)
+            toast(trans.note)
         }
         binding.rvGroupedTransactions.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -56,78 +68,9 @@ class TransactionsFragment : Fragment() {
         }
     }
 
-    private fun showDummyList() {
-        val dummyList1 = mutableListOf<Transaction>()
-        dummyList1.add(
-            Transaction(
-                id = "0",
-                date = "01",
-                category = "Entertainment",
-                type = "Income",
-                amount = 1000.00,
-                wallet = "BDO"
-            )
-        )
-        dummyList1.add(
-            Transaction(
-                id = "1",
-                date = "01",
-                category = "Entertainment",
-                type = "Income",
-                amount = 1000.00,
-                wallet = "BDO"
-            )
-        )
-        dummyList1.add(
-            Transaction(
-                id = "2",
-                date = "01",
-                category = "Entertainment",
-                type = "Income",
-                amount = 1000.00,
-                wallet = "BDO"
-            )
-        )
-        dummyList1.add(
-            Transaction(
-                id = "3",
-                date = "01",
-                category = "Entertainment",
-                type = "Income",
-                amount = 1000.00,
-                wallet = "BDO"
-            )
-        )
-        dummyList1.add(
-            Transaction(
-                id = "4",
-                date = "01",
-                category = "Entertainment",
-                type = "Income",
-                amount = 1000.00,
-                wallet = "BDO"
-            )
-        )
-        dummyList1.add(
-            Transaction(
-                id = "5",
-                date = "01",
-                category = "Entertainment",
-                type = "Income",
-                amount = 1000.00,
-                wallet = "BDO"
-            )
-        )
-
-        val months = listOf("01", "02", "03", "04")
-        val dummySection = months.map { month ->
-            val filteredList = dummyList1.filter { trans ->
-                trans.date == month
-            }
-            TransactionSection(Long.MIN_VALUE.toString(), month, filteredList)
-        }
-
-
-        headerTransactionAdapter.submitList(dummySection)
+    private fun observeData(){
+        viewModel.getTransactions().observe(viewLifecycleOwner, Observer {
+            Log.d("CHECK", "transaction: ${it.size}")
+        })
     }
 }

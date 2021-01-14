@@ -33,8 +33,6 @@ class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction)
         RecyclerView.ViewHolder(binding.root) {
         fun bind(transaction: Transaction) {
             binding.txtDay.text = transaction.date
-            binding.txtName.text = transaction.category
-            binding.txtNotes.text = transaction.wallet
 
             binding.root.setOnClickListener {
                 onItemClick(transaction)
