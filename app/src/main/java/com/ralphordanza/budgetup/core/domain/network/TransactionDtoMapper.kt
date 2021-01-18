@@ -10,7 +10,7 @@ class TransactionDtoMapper : DomainMapper<TransactionDto, Transaction> {
         return Transaction(
             id = model.id,
             note = model.note,
-            date = model.date,
+            createdAt = model.createdAt,
             amount = model.amount,
             walletId = model.walletId,
             type = model.type
@@ -21,7 +21,7 @@ class TransactionDtoMapper : DomainMapper<TransactionDto, Transaction> {
         return TransactionDto(
             id = domainModel.id,
             note = domainModel.note,
-            date = domainModel.date,
+            createdAt = domainModel.createdAt,
             amount = domainModel.amount,
             walletId = domainModel.walletId,
             type = domainModel.type

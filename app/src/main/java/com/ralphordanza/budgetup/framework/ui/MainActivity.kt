@@ -8,6 +8,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.navArgs
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
@@ -16,6 +18,7 @@ import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.login.LoginActivity
+import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentArgs
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.activities.start
 import splitties.toast.toast
@@ -27,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val loginViewModel: LoginViewModel by viewModels()
+
+    private val args: TransactionsFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +68,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.transactionsFragment -> {
                     supportActionBar?.show()
                     binding.fab.setOnClickListener {
-                        val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment()
+                        val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment(
+                            args.walletData
+                        )
                         navController.navigate(action)
                     }
                     showBottomAppBar()

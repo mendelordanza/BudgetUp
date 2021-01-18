@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ralphordanza.budgetup.core.domain.model.Failed
 import com.ralphordanza.budgetup.core.domain.model.Success
 import com.ralphordanza.budgetup.core.domain.model.Transaction
+import com.ralphordanza.budgetup.core.domain.model.TransactionSection
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import com.ralphordanza.budgetup.framework.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -19,8 +20,8 @@ class TransactionViewModel @ViewModelInject constructor(
 
     fun getSessionManager() = sessionManager
 
-    private val transactions = MutableLiveData<List<Transaction>>()
-    fun getTransactions(): LiveData<List<Transaction>> = transactions
+    private val transactions = MutableLiveData<List<TransactionSection>>()
+    fun getTransactions(): LiveData<List<TransactionSection>> = transactions
 
     private val isTransactionAdded = MutableLiveData<Boolean>()
     fun getIsTransactionAdded(): LiveData<Boolean> = isTransactionAdded

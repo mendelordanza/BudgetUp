@@ -6,14 +6,12 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.ralphordanza.budgetup.core.data.datasource.TransactionDataSource
-import com.ralphordanza.budgetup.core.domain.model.Failed
-import com.ralphordanza.budgetup.core.domain.model.Result
-import com.ralphordanza.budgetup.core.domain.model.Success
-import com.ralphordanza.budgetup.core.domain.model.Transaction
+import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.domain.network.TransactionDto
 import com.ralphordanza.budgetup.core.domain.network.TransactionDtoMapper
 import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
+import com.ralphordanza.budgetup.framework.utils.DateHelper
 import kotlinx.coroutines.tasks.await
 import org.mariuszgromada.math.mxparser.*
 import java.lang.Exception
@@ -24,14 +22,41 @@ class TransactionDataSourceImpl @Inject constructor(
     private val transactionDtoMapper: TransactionDtoMapper
 ) : TransactionDataSource {
 
-    override suspend fun getTransactions(userId: String): List<Transaction> {
-        return transactionDtoMapper.fromEntityList(
+    override suspend fun getTransactions(userId: String): List<TransactionSection> {
+        val months = listOf(
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+        )
+
+        val transactionsList = transactionDtoMapper.fromEntityList(
             firebaseFirestore.collection("transactions")
                 .whereEqualTo("userId", userId)
                 .get()
                 .await()
                 .toObjects(TransactionDto::class.java)
         )
+
+        val transactionSections = months.map { month ->
+            val filteredList = transactionsList.filter { trans ->
+                DateHelper.parseDate(
+                    "EEE MMM dd HH:mm:ss zzzz yyyy",
+                    "MMM",
+                    trans.createdAt.toDate().toString()) == month
+            }
+            TransactionSection(Long.MIN_VALUE.toString(), month, filteredList)
+        }
+
+        return transactionSections
     }
 
     override suspend fun addTransaction(

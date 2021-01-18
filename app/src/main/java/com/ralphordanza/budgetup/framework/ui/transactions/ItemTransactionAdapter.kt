@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemTransactionBinding
 import com.ralphordanza.budgetup.core.domain.model.Transaction
+import com.ralphordanza.budgetup.framework.utils.DateHelper
 
 class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction) -> Unit) :
     ListAdapter<Transaction, ItemTransactionAdapter.ViewHolder>(DiffCallback()) {
@@ -32,7 +33,12 @@ class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction)
     inner class ViewHolder(private val binding: ItemTransactionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(transaction: Transaction) {
-            binding.txtDay.text = transaction.date
+            binding.txtAmount.text = transaction.amount
+            binding.txtNotes.text = transaction.note
+            binding.txtDay.text = DateHelper.parseDate(
+                "EEE MMM dd HH:mm:ss zzzz yyyy",
+                "dd",
+                transaction.createdAt.toDate().toString())
 
             binding.root.setOnClickListener {
                 onItemClick(transaction)

@@ -1,12 +1,13 @@
 package com.ralphordanza.budgetup.core.domain.model
 
 import android.os.Parcelable
+import com.google.firebase.Timestamp
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Transaction(
     val id: String,
-    val date: String,
+    val createdAt: Timestamp,
     val type: String,
     val amount: String,
     val walletId: String,

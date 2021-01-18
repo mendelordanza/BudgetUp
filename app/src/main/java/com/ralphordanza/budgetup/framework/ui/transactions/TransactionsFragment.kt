@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentTransactionsBinding
 import com.ralphordanza.budgetup.core.domain.model.Transaction
 import com.ralphordanza.budgetup.core.domain.model.TransactionSection
+import com.ralphordanza.budgetup.framework.utils.DateHelper
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
 
@@ -68,9 +69,9 @@ class TransactionsFragment : Fragment() {
         }
     }
 
-    private fun observeData(){
+    private fun observeData() {
         viewModel.getTransactions().observe(viewLifecycleOwner, Observer {
-            Log.d("CHECK", "transaction: ${it.size}")
+            headerTransactionAdapter.submitList(it)
         })
     }
 }
