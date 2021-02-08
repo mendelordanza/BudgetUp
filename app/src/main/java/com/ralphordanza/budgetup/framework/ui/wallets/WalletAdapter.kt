@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ralphordanza.budgetup.databinding.ItemWalletBinding
 import com.ralphordanza.budgetup.core.domain.model.Wallet
+import com.ralphordanza.budgetup.framework.extensions.getDecimalString
 
 class WalletAdapter(
     private val onClick: (wallet: Wallet) -> Unit,
@@ -27,7 +28,7 @@ class WalletAdapter(
         RecyclerView.ViewHolder(binding.root), View.OnCreateContextMenuListener {
         fun bind(wallet: Wallet) {
             binding.txtName.text = wallet.name
-            binding.txtAmount.text = wallet.amount
+            binding.txtAmount.text = wallet.amount.toDouble().getDecimalString()
             binding.root.setOnClickListener {
                 onClick(wallet)
             }

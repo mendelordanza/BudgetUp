@@ -5,11 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ralphordanza.budgetup.core.domain.model.Failed
-import com.ralphordanza.budgetup.core.domain.model.Success
+import com.google.firebase.firestore.DocumentReference
+import com.ralphordanza.budgetup.core.domain.model.Resource
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import com.ralphordanza.budgetup.framework.utils.SessionManager
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class WalletViewModel @ViewModelInject constructor(
@@ -20,17 +21,23 @@ class WalletViewModel @ViewModelInject constructor(
 
     fun getSessionManager() = sessionManager
 
+    private val userId = MutableLiveData<String>()
+    fun getUserId(): LiveData<String> = userId
+
     private val wallets = MutableLiveData<List<Wallet>>()
     fun getWallets(): LiveData<List<Wallet>> = wallets
 
     private val total = MutableLiveData<Double>()
     fun getTotal(): LiveData<Double> = total
 
-    private val isAdded = MutableLiveData<Boolean>()
-    fun getIsAdded(): LiveData<Boolean> = isAdded
+    private val isAdded = MutableLiveData<Resource<DocumentReference>>()
+    fun getIsAdded(): LiveData<Resource<DocumentReference>> = isAdded
 
-    private val errorMessage = MutableLiveData<String>()
-    fun getErrorMessage(): LiveData<String> = errorMessage
+    fun userId() = viewModelScope.launch {
+        sessionManager.userIdFlow.collect {
+            userId.value = it
+        }
+    }
 
     fun getWallets(userId: String) = viewModelScope.launch {
         wallets.postValue(interactors.getWallets(userId))
@@ -41,15 +48,8 @@ class WalletViewModel @ViewModelInject constructor(
     }
 
     fun addWallet(userId: String, walletName: String, initialAmt: String) = viewModelScope.launch {
-        when (val result = interactors.addWallet(userId, walletName, initialAmt)) {
-            is Success -> {
-                isAdded.value = true
-            }
-            is Failed -> {
-                isAdded.value = false
-                errorMessage.value = result.message
-            }
-        }
+        isAdded.value = Resource.loading(null)
+        isAdded.value = interactors.addWallet(userId, walletName, initialAmt)
     }
 
     fun deleteWallet(userId: String, wallet: Wallet) = viewModelScope.launch{

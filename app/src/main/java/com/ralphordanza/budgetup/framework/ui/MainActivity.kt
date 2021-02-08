@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavArgument
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navArgs
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.ralphordanza.budgetup.R
+import com.ralphordanza.budgetup.core.domain.model.Status
+import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
 import com.ralphordanza.budgetup.framework.ui.calculator.CalculatorFragment
 import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
@@ -31,8 +35,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val loginViewModel: LoginViewModel by viewModels()
 
-    private val args: TransactionsFragmentArgs by navArgs()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBar.toolbar)
         setupActionBarWithNavController(navController)
 
+        var walletData: NavArgument? = null
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id){
                 R.id.homeFragment -> {
@@ -68,9 +71,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.transactionsFragment -> {
                     supportActionBar?.show()
                     binding.fab.setOnClickListener {
-                        val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment(
-                            args.walletData
-                        )
+                        val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment()
                         navController.navigate(action)
                     }
                     showBottomAppBar()
@@ -85,7 +86,12 @@ class MainActivity : AppCompatActivity() {
                     hideBottomAppBar()
                     binding.fab.hide()
                 }
-                R.id.addWalletFragment, R.id.addTransactionFragment -> {
+                R.id.addWalletFragment -> {
+                    supportActionBar?.show()
+                    hideBottomAppBar()
+                    binding.fab.hide()
+                }
+                R.id.addTransactionFragment -> {
                     supportActionBar?.show()
                     hideBottomAppBar()
                     binding.fab.hide()
@@ -138,10 +144,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observerData(){
-        loginViewModel.getLogout().observe(this, Observer { isLoggedOut ->
-            if(isLoggedOut){
-                start<LoginActivity>()
-                finishAffinity()
+        loginViewModel.getLogout().observe(this, Observer { resource ->
+            when(resource.status){
+                Status.LOADING -> {
+
+                }
+                Status.SUCCESS -> {
+                    if(resource.data == null){
+                        loginViewModel.clearSession()
+                        start<LoginActivity>()
+                        finishAffinity()
+                    }
+                }
+                Status.ERROR -> {
+                    toast(resource.message.toString())
+                }
             }
         })
     }

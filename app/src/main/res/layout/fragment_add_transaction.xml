@@ -34,21 +34,21 @@
                 android:hint="Enter amount"
                 android:textSize="20sp" />
 
-            <AutoCompleteTextView
-                android:id="@+id/et_category"
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/et_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_textbox_dropdown"
                 android:clickable="true"
-                android:drawableStart="@drawable/ic_folder"
+                android:drawableStart="@drawable/ic_wallet"
                 android:drawablePadding="8dp"
                 android:focusable="false"
-                android:hint="@string/select_category"
-                android:padding="15dp"
+                android:hint="Type"
+                android:padding="5dp"
                 android:textSize="14sp" />
 
-            <AutoCompleteTextView
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/et_wallet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                 android:drawablePadding="8dp"
                 android:focusable="false"
                 android:hint="@string/select_wallet"
-                android:padding="15dp"
+                android:padding="5dp"
                 android:textSize="14sp" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -73,6 +73,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/date"
+                    android:clickable="true"
+                    android:focusable="false"
                     android:drawableStart="@drawable/ic_calendar"
                     android:drawablePadding="5dp"
                     android:inputType="date" />

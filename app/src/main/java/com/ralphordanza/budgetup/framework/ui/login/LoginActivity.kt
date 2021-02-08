@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.ralphordanza.budgetup.R
+import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.databinding.ActivityLoginBinding
 import com.ralphordanza.budgetup.databinding.ActivityRegisterBinding
 import com.ralphordanza.budgetup.framework.ui.MainActivity
@@ -38,10 +39,6 @@ class LoginActivity : AppCompatActivity() {
             loginUser()
         }
 
-        binding.btnGuest.setOnClickListener {
-            loginAsGuest()
-        }
-
         binding.btnRegister.setOnClickListener {
             start<RegisterActivity>()
         }
@@ -51,27 +48,28 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
     }
 
-    private fun loginAsGuest(){
-        loginViewModel.loginAsGuest()
-    }
-
     private fun observeData(){
-        loginViewModel.getIsLoading().observe(this, Observer { loading ->
-            binding.progressBar.isVisible = loading
-            binding.btnLogin.isVisible = !loading
-            binding.btnGuest.isVisible = !loading
-        })
-
-        loginViewModel.getLoginResult().observe(this, Observer { result ->
-            //user.uid
-            result.user?.let { user ->
-                start<MainActivity>()
-                finishAffinity()
+        loginViewModel.getLoginResult().observe(this, Observer { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+                    binding.progressBar.isVisible = true
+                    binding.btnLogin.isVisible = false
+                }
+                Status.SUCCESS -> {
+                    binding.progressBar.isVisible = false
+                    binding.btnLogin.isVisible = true
+                    resource.data?.let {
+                        loginViewModel.storeUserId(it.user?.uid ?: "")
+                        start<MainActivity>()
+                        finishAffinity()
+                    }
+                }
+                Status.ERROR -> {
+                    binding.progressBar.isVisible = false
+                    binding.btnLogin.isVisible = true
+                    toast(resource.message.toString())
+                }
             }
-        })
-
-        loginViewModel.getMessage().observe(this, Observer { message ->
-            toast(message)
         })
     }
 }

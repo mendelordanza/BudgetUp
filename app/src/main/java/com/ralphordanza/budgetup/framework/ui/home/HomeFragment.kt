@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.FragmentHomeBinding
+import com.ralphordanza.budgetup.framework.extensions.getDecimalString
 import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.wallets.WalletAdapter
 import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
@@ -50,16 +51,18 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
+        walletViewModel.userId()
         loadWallets()
         observeData()
     }
 
     private fun loadWallets() {
-        walletViewModel.getSessionManager().userIdFlow.asLiveData()
-            .observe(viewLifecycleOwner, Observer { userId ->
+        walletViewModel.getUserId().observe(viewLifecycleOwner, Observer { userId ->
+            if (userId.isNotEmpty()) {
                 walletViewModel.getTotal(userId)
                 walletViewModel.getWallets(userId)
-            })
+            }
+        })
     }
 
     private fun setupRecyclerView() {
@@ -70,16 +73,17 @@ class HomeFragment : Fragment() {
             )
             findNavController().navigate(action)
         }, { type, wallet ->
-            when(type){
+            when (type) {
                 0 -> { //Edit
 
                 }
                 1 -> { //Delete
-                    walletViewModel.getSessionManager().userIdFlow.asLiveData()
-                        .observe(viewLifecycleOwner, Observer { id ->
-                            walletViewModel.deleteWallet(id, wallet)
+                    walletViewModel.getUserId().observe(viewLifecycleOwner, Observer { userId ->
+                        if (userId.isNotEmpty()) {
+                            walletViewModel.deleteWallet(userId, wallet)
                             loadWallets()
-                        })
+                        }
+                    })
                 }
             }
         })
@@ -91,7 +95,7 @@ class HomeFragment : Fragment() {
 
     private fun observeData() {
         walletViewModel.getTotal().observe(viewLifecycleOwner, Observer {
-            binding.txtAmount.text = it.toString()
+            binding.txtAmount.text = it.getDecimalString()
         })
 
         walletViewModel.getWallets().observe(viewLifecycleOwner, Observer { wallets ->

@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class GetTransactions @Inject constructor(private val transactionRepository: TransactionRepository) {
 
-    suspend operator fun invoke(userId: String) = transactionRepository.getTransactions(userId)
+    suspend operator fun invoke(userId: String, walletId: String) = transactionRepository.getTransactions(userId, walletId)
 }

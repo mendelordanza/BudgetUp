@@ -5,12 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ralphordanza.budgetup.core.domain.model.Failed
-import com.ralphordanza.budgetup.core.domain.model.Success
-import com.ralphordanza.budgetup.core.domain.model.Transaction
-import com.ralphordanza.budgetup.core.domain.model.TransactionSection
+import com.google.firebase.firestore.DocumentReference
+import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import com.ralphordanza.budgetup.framework.utils.SessionManager
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class TransactionViewModel @ViewModelInject constructor(
@@ -18,36 +17,34 @@ class TransactionViewModel @ViewModelInject constructor(
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
-    fun getSessionManager() = sessionManager
-
     private val transactions = MutableLiveData<List<TransactionSection>>()
     fun getTransactions(): LiveData<List<TransactionSection>> = transactions
 
-    private val isTransactionAdded = MutableLiveData<Boolean>()
-    fun getIsTransactionAdded(): LiveData<Boolean> = isTransactionAdded
+    private val userId = MutableLiveData<String>()
+    fun getUserId(): LiveData<String> = userId
 
-    private val errorMessage = MutableLiveData<String>()
-    fun getErrorMessage(): LiveData<String> = errorMessage
+    private val isTransactionAdded = MutableLiveData<Resource<DocumentReference>>()
+    fun getIsTransactionAdded(): LiveData<Resource<DocumentReference>> = isTransactionAdded
 
-    fun loadTransactions(userId: String) = viewModelScope.launch {
-        transactions.postValue(interactors.getTransactions(userId))
+    fun loadTransactions(userId: String, walletId: String) = viewModelScope.launch {
+        transactions.postValue(interactors.getTransactions(userId, walletId))
+    }
+
+    fun userId() = viewModelScope.launch {
+        sessionManager.userIdFlow.collect {
+            userId.value = it
+        }
     }
 
     fun addTransaction(
         amount: String,
         userId: String,
+        date: String,
         walletId: String,
         type: String,
         note: String
     ) = viewModelScope.launch {
-        when (val result = interactors.addTransaction(amount, userId, walletId, type, note)) {
-            is Success -> {
-                isTransactionAdded.value = true
-            }
-            is Failed -> {
-                isTransactionAdded.value = false
-                errorMessage.value = result.message
-            }
-        }
+        isTransactionAdded.value = Resource.loading(null)
+        isTransactionAdded.value = interactors.addTransaction(amount, userId, date, walletId, type, note)
     }
 }

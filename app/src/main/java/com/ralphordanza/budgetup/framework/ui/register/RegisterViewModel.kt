@@ -5,45 +5,41 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ralphordanza.budgetup.core.domain.model.Failed
-import com.ralphordanza.budgetup.core.domain.model.Success
-import com.ralphordanza.budgetup.core.domain.model.User
+import com.google.firebase.auth.AuthResult
+import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import kotlinx.coroutines.launch
 
 class RegisterViewModel @ViewModelInject constructor(private val interactors: Interactors) :
     ViewModel() {
 
-    private val isSaveSuccess = MutableLiveData<Boolean>()
-    fun getIsSaveSuccess(): LiveData<Boolean> = isSaveSuccess
+    private val isSaveSuccess = MutableLiveData<Resource<Boolean>>()
+    fun getIsSaveSuccess(): LiveData<Resource<Boolean>> = isSaveSuccess
+
+    private val isRegistered = MutableLiveData<Resource<AuthResult>>()
+    fun getIsRegistered(): LiveData<Resource<AuthResult>> = isRegistered
 
     private val message = MutableLiveData<String>()
     fun getMessage(): LiveData<String> = message
 
-    fun register(firstName: String, lastName: String, email: String, password: String) =
+    fun register(email: String, password: String) =
         viewModelScope.launch {
-            when (val result = interactors.registerUser(email, password)) {
-                is Success -> {
-                    result.data.user?.let {
-                        val user = User(
-                            it.uid,
-                            firstName,
-                            lastName,
-                            email,
-                            password
-                        )
-                        saveToFirestore(user)
-                    }
-                }
-                is Failed -> {
-                    message.value = result.message
-                }
-            }
+            isRegistered.value = Resource.loading(null)
+            isRegistered.value = interactors.registerUser(email, password)
         }
 
-    private fun saveToFirestore(
-        user: User
+    fun saveToFirestore(
+        userId: String,
+        firstName: String, lastName: String,
+        email: String, password: String
     ) = viewModelScope.launch {
+        val user = User(
+            userId,
+            firstName,
+            lastName,
+            email,
+            password
+        )
         isSaveSuccess.value = interactors.saveToFirestore(user)
     }
 }

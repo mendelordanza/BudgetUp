@@ -21,4 +21,15 @@ object DateHelper {
         }
         return output
     }
+
+    @SuppressLint("SimpleDateFormat")
+    fun parseTimestamp(date: String): Date? {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        return try {
+            format.parse(date)
+        } catch (e: ParseException) {
+            Log.e("StringHelper", e.message!!)
+            null
+        }
+    }
 }

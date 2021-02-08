@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.databinding.FragmentTransactionsBinding
 import com.ralphordanza.budgetup.core.domain.model.Transaction
 import com.ralphordanza.budgetup.core.domain.model.TransactionSection
+import com.ralphordanza.budgetup.framework.extensions.getDecimalString
 import com.ralphordanza.budgetup.framework.utils.DateHelper
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
@@ -47,20 +48,18 @@ class TransactionsFragment : Fragment() {
 
         setupUi()
         setupTransactionList()
-        viewModel.getSessionManager().userIdFlow.asLiveData().observe(viewLifecycleOwner, Observer {
-            viewModel.loadTransactions(it)
-        })
+        viewModel.userId()
         observeData()
     }
 
     private fun setupUi() {
         binding.txtWallet.text = args.walletData.name
-        binding.txtAmount.text = args.walletData.amount
+        binding.txtAmount.text = args.walletData.amount.toDouble().getDecimalString()
     }
 
     private fun setupTransactionList() {
         headerTransactionAdapter = HeaderTransactionAdapter { trans ->
-            //TODO onClick
+            //TODO onClick edit transaction
             toast(trans.note)
         }
         binding.rvGroupedTransactions.apply {
@@ -70,6 +69,12 @@ class TransactionsFragment : Fragment() {
     }
 
     private fun observeData() {
+        viewModel.getUserId().observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty()){
+                viewModel.loadTransactions(it, args.walletData.id)
+            }
+        })
+
         viewModel.getTransactions().observe(viewLifecycleOwner, Observer {
             headerTransactionAdapter.submitList(it)
         })

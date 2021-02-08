@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.ralphordanza.budgetup.core.data.datasource.TransactionDataSource
 import com.ralphordanza.budgetup.core.domain.model.*
+import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.network.TransactionDto
 import com.ralphordanza.budgetup.core.domain.network.TransactionDtoMapper
 import com.ralphordanza.budgetup.core.domain.network.WalletDto
@@ -22,7 +23,10 @@ class TransactionDataSourceImpl @Inject constructor(
     private val transactionDtoMapper: TransactionDtoMapper
 ) : TransactionDataSource {
 
-    override suspend fun getTransactions(userId: String): List<TransactionSection> {
+    override suspend fun getTransactions(
+        userId: String,
+        walletId: String
+    ): List<TransactionSection> {
         val months = listOf(
             "Jan",
             "Feb",
@@ -41,6 +45,7 @@ class TransactionDataSourceImpl @Inject constructor(
         val transactionsList = transactionDtoMapper.fromEntityList(
             firebaseFirestore.collection("transactions")
                 .whereEqualTo("userId", userId)
+                .whereEqualTo("walletId", walletId)
                 .get()
                 .await()
                 .toObjects(TransactionDto::class.java)
@@ -51,7 +56,8 @@ class TransactionDataSourceImpl @Inject constructor(
                 DateHelper.parseDate(
                     "EEE MMM dd HH:mm:ss zzzz yyyy",
                     "MMM",
-                    trans.createdAt.toDate().toString()) == month
+                    trans.createdAt.toDate().toString()
+                ) == month
             }
             TransactionSection(Long.MIN_VALUE.toString(), month, filteredList)
         }
@@ -62,14 +68,16 @@ class TransactionDataSourceImpl @Inject constructor(
     override suspend fun addTransaction(
         amount: String,
         userId: String,
+        date: String,
         walletId: String,
         type: String,
         note: String
-    ): Result<DocumentReference> {
+    ): Resource<DocumentReference> {
         return try {
+            val utcDate = DateHelper.parseDate("MM/dd/yyyy", "yyyy-MM-dd'T'HH:mm:ss'Z'", date)
             val transaction = hashMapOf(
                 "amount" to amount,
-                "createdAt" to FieldValue.serverTimestamp(),
+                "createdAt" to DateHelper.parseTimestamp(utcDate),
                 "note" to note,
                 "type" to type,
                 "userId" to userId,
@@ -77,9 +85,9 @@ class TransactionDataSourceImpl @Inject constructor(
             )
             val docRef = firebaseFirestore.collection("transactions")
                 .add(transaction)
-            Success(awaitTaskResult(docRef))
+            Resource.success(awaitTaskResult(docRef))
         } catch (e: Exception) {
-            Failed(Exception(e.localizedMessage))
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE , null)
         }
     }
 

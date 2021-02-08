@@ -5,10 +5,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ralphordanza.budgetup.core.data.datasource.UserDataSource
-import com.ralphordanza.budgetup.core.domain.model.Failed
-import com.ralphordanza.budgetup.core.domain.model.Result
-import com.ralphordanza.budgetup.core.domain.model.Success
-import com.ralphordanza.budgetup.core.domain.model.User
+import com.ralphordanza.budgetup.core.domain.model.*
+import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
 import java.lang.Exception
 import javax.inject.Inject
@@ -18,49 +16,53 @@ class UserDataSourceImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) : UserDataSource {
 
-    override suspend fun register(email: String, password: String): Result<AuthResult> {
+    override suspend fun register(email: String, password: String): Resource<AuthResult> {
         return try{
             val task = firebaseAuth.createUserWithEmailAndPassword(
                 email,
                 password
             )
-            Success(awaitTaskResult(task))
+            Resource.success(awaitTaskResult(task))
         } catch (e: Exception){
-            Failed(Exception(e.localizedMessage))
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }
     }
 
-    override suspend fun saveToFirestore(user: User): Boolean {
+    override suspend fun saveToFirestore(user: User): Resource<Boolean> {
         return try{
             firebaseFirestore.collection("users")
                 .document(user.id)
                 .set(user)
-            true
+            Resource.success(true)
         } catch (e: Exception){
-            false
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }
     }
 
-    override suspend fun login(email: String, password: String): Result<AuthResult> {
+    override suspend fun login(email: String, password: String): Resource<AuthResult> {
         return try{
             val task = firebaseAuth.signInWithEmailAndPassword(email, password)
-            Success(awaitTaskResult(task))
+            Resource.success(awaitTaskResult(task))
         } catch (e: Exception){
-            Failed(Exception(e.localizedMessage))
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }
     }
 
-    override suspend fun loginAsGuest(): Result<AuthResult> {
+    override suspend fun loginAsGuest(): Resource<AuthResult> {
         return try{
             val task = firebaseAuth.signInAnonymously()
-            Success(awaitTaskResult(task))
+            Resource.success(awaitTaskResult(task))
         } catch (e: Exception){
-            Failed(Exception(e.localizedMessage))
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }
     }
 
-    override suspend fun logout(): FirebaseUser? {
-        firebaseAuth.signOut()
-        return firebaseAuth.currentUser
+    override suspend fun logout(): Resource<FirebaseUser?> {
+        return try{
+            firebaseAuth.signOut()
+            Resource.success(firebaseAuth.currentUser)
+        } catch (e: Exception){
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
+        }
     }
 }

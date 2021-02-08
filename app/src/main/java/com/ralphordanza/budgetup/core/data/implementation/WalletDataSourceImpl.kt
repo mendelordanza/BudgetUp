@@ -2,13 +2,10 @@ package com.ralphordanza.budgetup.core.data.implementation
 
 import com.google.firebase.firestore.*
 import com.ralphordanza.budgetup.core.data.datasource.WalletDataSource
-import com.ralphordanza.budgetup.core.domain.model.Failed
-import com.ralphordanza.budgetup.core.domain.model.Result
-import com.ralphordanza.budgetup.core.domain.model.Success
-import com.ralphordanza.budgetup.core.domain.model.Wallet
+import com.ralphordanza.budgetup.core.domain.model.*
+import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.core.domain.network.WalletDtoMapper
-import com.ralphordanza.budgetup.framework.extensions.awaitTaskCompletable
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -51,7 +48,7 @@ class WalletDataSourceImpl @Inject constructor(
         userId: String,
         walletName: String,
         initialAmt: String
-    ): Result<DocumentReference> {
+    ): Resource<DocumentReference> {
         return try {
             val wallet = hashMapOf(
                 "name" to walletName,
@@ -62,9 +59,9 @@ class WalletDataSourceImpl @Inject constructor(
                 .document(userId)
                 .collection("wallets")
                 .add(wallet)
-            Success(awaitTaskResult(docRef))
+            Resource.success(awaitTaskResult(docRef))
         } catch (e: Exception) {
-            Failed(Exception(e.localizedMessage))
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }
     }
 

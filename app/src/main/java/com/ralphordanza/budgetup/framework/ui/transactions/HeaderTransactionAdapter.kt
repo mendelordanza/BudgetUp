@@ -36,7 +36,6 @@ class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -
     inner class ViewHolder(private val binding: ItemTransactionHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(transactionSection: TransactionSection) {
-
             if(transactionSection.items.isNotEmpty()){
                 binding.txtMonth.text = transactionSection.month
 
@@ -49,11 +48,6 @@ class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -
                     adapter = itemTransactionAdapter
                 }
                 itemTransactionAdapter.submitList(transactionSection.items)
-            }
-            else{
-                binding.root.updateLayoutParams {
-                    this.height = 0
-                }
             }
         }
     }
