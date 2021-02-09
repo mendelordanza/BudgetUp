@@ -59,7 +59,7 @@ class TransactionDataSourceImpl @Inject constructor(
                     trans.createdAt.toDate().toString()
                 ) == month
             }
-            TransactionSection(Long.MIN_VALUE.toString(), month, filteredList)
+            TransactionSection(month, month, filteredList)
         }
 
         return transactionSections
@@ -87,7 +87,7 @@ class TransactionDataSourceImpl @Inject constructor(
                 .add(transaction)
             Resource.success(awaitTaskResult(docRef))
         } catch (e: Exception) {
-            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE , null)
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }
     }
 
