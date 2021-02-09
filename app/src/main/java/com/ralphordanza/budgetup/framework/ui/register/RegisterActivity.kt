@@ -6,6 +6,8 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.ralphordanza.budgetup.core.domain.model.Status
+import com.ralphordanza.budgetup.core.domain.model.User
 import com.ralphordanza.budgetup.databinding.ActivityRegisterBinding
 import com.ralphordanza.budgetup.framework.ui.MainActivity
 import com.ralphordanza.budgetup.framework.ui.login.LoginActivity
@@ -41,8 +43,6 @@ class RegisterActivity : AppCompatActivity() {
     private fun attachActions() {
         binding.btnRegister.setOnClickListener {
             registerViewModel.register(
-                binding.etFirstName.text.toString(),
-                binding.etLastName.text.toString(),
                 binding.etEmail.text.toString(),
                 binding.etPassword.text.toString()
             )
@@ -53,16 +53,45 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeData(){
-        registerViewModel.getIsSaveSuccess().observe(this, Observer { isSuccess ->
-            if(isSuccess){
-                start<MainActivity>()
-                finish()
+    private fun observeData() {
+        registerViewModel.getIsRegistered().observe(this, Observer { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+
+                }
+                Status.SUCCESS -> {
+                    resource.data?.let {
+                        registerViewModel.saveToFirestore(
+                            it.user?.uid ?: "", binding.etFirstName.text.toString(),
+                            binding.etLastName.text.toString(), binding.etEmail.text.toString(),
+                            binding.etPassword.text.toString()
+                        )
+                    }
+                }
+                Status.ERROR -> {
+                    toast(resource.message.toString())
+                }
             }
         })
 
-        registerViewModel.getMessage().observe(this, Observer { message ->
-            toast(message)
+
+        registerViewModel.getIsSaveSuccess().observe(this, Observer { resource ->
+            when (resource.status) {
+                Status.LOADING -> {
+
+                }
+                Status.SUCCESS -> {
+                    resource.data?.let {
+                        if (it) {
+                            start<MainActivity>()
+                            finish()
+                        }
+                    }
+                }
+                Status.ERROR -> {
+                    toast(resource.message.toString())
+                }
+            }
         })
     }
 }

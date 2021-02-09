@@ -12,6 +12,7 @@ import com.ralphordanza.budgetup.core.data.implementation.WalletDataSourceImpl
 import com.ralphordanza.budgetup.core.data.repository.TransactionRepository
 import com.ralphordanza.budgetup.core.data.repository.UserRepository
 import com.ralphordanza.budgetup.core.data.repository.WalletRepository
+import com.ralphordanza.budgetup.core.domain.network.TransactionDtoMapper
 import com.ralphordanza.budgetup.core.domain.network.WalletDtoMapper
 import com.ralphordanza.budgetup.framework.utils.SessionManager
 import dagger.Module
@@ -39,6 +40,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideTransactionDtoMapper() : TransactionDtoMapper{
+        return TransactionDtoMapper()
+    }
+
+    @Provides
+    @Singleton
     fun provideUserDataSource(firebaseAuth: FirebaseAuth, firebaseFirestore: FirebaseFirestore) : UserDataSource{
         return UserDataSourceImpl(firebaseAuth, firebaseFirestore)
     }
@@ -51,8 +58,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTransactionDataSource() : TransactionDataSource{
-        return TransactionDataSourceImpl()
+    fun provideTransactionDataSource(firebaseFirestore: FirebaseFirestore, transactionDtoMapper: TransactionDtoMapper) : TransactionDataSource{
+        return TransactionDataSourceImpl(firebaseFirestore, transactionDtoMapper)
     }
 
     @Provides

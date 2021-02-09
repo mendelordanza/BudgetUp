@@ -22,13 +22,14 @@ class SessionManager @Inject constructor(context: Context) {
         }
     }
 
+    val userIdFlow: Flow<String> = dataStore.data.map {
+        it[USER_ID] ?: ""
+    }
+
+
     suspend fun clearSession(){
         dataStore.edit {
             it.clear()
         }
-    }
-
-    val userIdFlow: Flow<String> = dataStore.data.map {
-        it[USER_ID] ?: ""
     }
 }

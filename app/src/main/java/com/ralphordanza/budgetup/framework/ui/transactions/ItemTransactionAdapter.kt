@@ -2,11 +2,16 @@ package com.ralphordanza.budgetup.framework.ui.transactions
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.databinding.ItemTransactionBinding
 import com.ralphordanza.budgetup.core.domain.model.Transaction
+import com.ralphordanza.budgetup.framework.extensions.getDecimalString
+import com.ralphordanza.budgetup.framework.utils.Constants.EXPENSE
+import com.ralphordanza.budgetup.framework.utils.DateHelper
 
 class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction) -> Unit) :
     ListAdapter<Transaction, ItemTransactionAdapter.ViewHolder>(DiffCallback()) {
@@ -32,9 +37,21 @@ class ItemTransactionAdapter(private val onItemClick: (transaction: Transaction)
     inner class ViewHolder(private val binding: ItemTransactionBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(transaction: Transaction) {
-            binding.txtDay.text = transaction.date
-            binding.txtName.text = transaction.category
-            binding.txtNotes.text = transaction.wallet
+            var amount = ""
+            if (transaction.type == EXPENSE) {
+                amount = "-${transaction.amount.toDouble().getDecimalString()}"
+                binding.txtAmount.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red_400))
+            } else {
+                amount = "+${transaction.amount.toDouble().getDecimalString()}"
+                binding.txtAmount.setTextColor(ContextCompat.getColor(binding.root.context, R.color.colorPrimary))
+            }
+            binding.txtAmount.text = amount
+            binding.txtName.text = transaction.note
+            binding.txtDay.text = DateHelper.parseDate(
+                "EEE MMM dd HH:mm:ss zzzz yyyy",
+                "dd",
+                transaction.createdAt.toDate().toString()
+            )
 
             binding.root.setOnClickListener {
                 onItemClick(transaction)

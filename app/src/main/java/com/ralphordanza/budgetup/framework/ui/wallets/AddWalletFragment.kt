@@ -12,11 +12,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.ralphordanza.budgetup.R
+import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.databinding.FragmentAddWalletBinding
 import com.ralphordanza.budgetup.framework.ui.transactions.AMOUNT_KEY
 import com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.transactions.REQUEST_AMOUNT
 import dagger.hilt.android.AndroidEntryPoint
+import splitties.toast.toast
 
 @AndroidEntryPoint
 class AddWalletFragment : Fragment() {
@@ -41,6 +43,7 @@ class AddWalletFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        walletViewModel.userId()
         setupAssets()
         attachActions()
         listenAmount()
@@ -86,7 +89,7 @@ class AddWalletFragment : Fragment() {
         }
 
         binding.btnAdd.setOnClickListener {
-            walletViewModel.getSessionManager().userIdFlow.asLiveData()
+            walletViewModel.getUserId()
                 .observe(viewLifecycleOwner, Observer {
                     walletViewModel.addWallet(
                         it,
@@ -98,9 +101,17 @@ class AddWalletFragment : Fragment() {
     }
 
     private fun observeData() {
-        walletViewModel.getIsAdded().observe(viewLifecycleOwner, Observer { walletAdded ->
-            if (walletAdded) {
-                findNavController().navigateUp()
+        walletViewModel.getIsAdded().observe(viewLifecycleOwner, Observer { resource ->
+            when(resource.status){
+                Status.LOADING -> {
+
+                }
+                Status.SUCCESS -> {
+                    findNavController().popBackStack()
+                }
+                Status.ERROR -> {
+                    toast(resource.message.toString())
+                }
             }
         })
     }

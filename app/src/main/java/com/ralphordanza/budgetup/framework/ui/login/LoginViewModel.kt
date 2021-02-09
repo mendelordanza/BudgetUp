@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.AuthResult
-import com.ralphordanza.budgetup.core.domain.model.Failed
-import com.ralphordanza.budgetup.core.domain.model.Success
+import com.google.firebase.auth.FirebaseUser
+import com.ralphordanza.budgetup.core.domain.model.Resource
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import com.ralphordanza.budgetup.framework.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -18,54 +18,27 @@ class LoginViewModel @ViewModelInject constructor(
 ) :
     ViewModel() {
 
-    fun getSessionManager() = sessionManager
+    private val loginResult = MutableLiveData<Resource<AuthResult>>()
+    fun getLoginResult(): LiveData<Resource<AuthResult>> = loginResult
 
-    private val loginResult = MutableLiveData<AuthResult>()
-    fun getLoginResult(): LiveData<AuthResult> = loginResult
-
-    private val logout = MutableLiveData<Boolean>()
-    fun getLogout(): LiveData<Boolean> = logout
-
-    private val message = MutableLiveData<String>()
-    fun getMessage(): LiveData<String> = message
-
-    private val isLoading = MutableLiveData<Boolean>()
-    fun getIsLoading(): LiveData<Boolean> = isLoading
+    private val logout = MutableLiveData<Resource<FirebaseUser?>>()
+    fun getLogout(): LiveData<Resource<FirebaseUser?>> = logout
 
     fun login(email: String, password: String) = viewModelScope.launch {
-        isLoading.value = true
-        when (val result = interactors.loginUser(email, password)) {
-            is Success -> {
-                result.data.user?.let {
-                    getSessionManager().storeUserId(it.uid)
-                }
-                isLoading.value = false
-                loginResult.postValue(result.data)
-            }
-            is Failed -> {
-                isLoading.value = false
-                message.value = result.message
-            }
-        }
+        loginResult.value = Resource.loading(null)
+        loginResult.value = interactors.loginUser(email, password)
     }
 
-    fun loginAsGuest() = viewModelScope.launch {
-        isLoading.value = true
-        when (val result = interactors.loginAsGuest()) {
-            is Success -> {
-                isLoading.value = false
-                loginResult.postValue(result.data)
-            }
-            is Failed -> {
-                isLoading.value = false
-                message.value = result.message
-            }
-        }
+    fun storeUserId(userId: String) = viewModelScope.launch {
+        sessionManager.storeUserId(userId)
     }
 
     fun logout() = viewModelScope.launch {
-        //if result is null, logout is successful
-        logout.value = interactors.logoutUser() == null
-        getSessionManager().clearSession()
+        logout.value = Resource.loading(null)
+        logout.value = interactors.logoutUser()
+    }
+
+    fun clearSession() = viewModelScope.launch {
+        sessionManager.clearSession()
     }
 }
