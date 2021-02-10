@@ -13,6 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navArgs
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.customview.customView
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.core.domain.model.Wallet
@@ -133,7 +136,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun attachActions(){
         binding.bottomAppBar.setNavigationOnClickListener {
-            toast("Navigation")
+            MaterialDialog(this, BottomSheet())
+                .customView(R.layout.bottom_sheet)
+                .cornerRadius(16f)
+                .show()
         }
         binding.bottomAppBar.setOnMenuItemClickListener {
             if(it.itemId == R.id.bottom_nav_more){
