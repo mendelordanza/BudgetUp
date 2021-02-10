@@ -23,6 +23,9 @@ class TransactionViewModel @ViewModelInject constructor(
     private val userId = MutableLiveData<String>()
     fun getUserId(): LiveData<String> = userId
 
+    private val walletId = MutableLiveData<String>()
+    fun getWalletId(): LiveData<String> = walletId
+
     private val isTransactionAdded = MutableLiveData<Resource<DocumentReference>>()
     fun getIsTransactionAdded(): LiveData<Resource<DocumentReference>> = isTransactionAdded
 
@@ -33,6 +36,16 @@ class TransactionViewModel @ViewModelInject constructor(
     fun userId() = viewModelScope.launch {
         sessionManager.userIdFlow.collect {
             userId.value = it
+        }
+    }
+
+    fun storeWalletId(walletId: String) = viewModelScope.launch {
+        sessionManager.storeWalletId(walletId)
+    }
+
+    fun walletId() = viewModelScope.launch {
+        sessionManager.walletIdFlow.collect {
+            walletId.value = it
         }
     }
 

@@ -45,9 +45,9 @@ class TransactionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         setupUi()
         setupTransactionList()
+        viewModel.storeWalletId(args.walletData.id)
         viewModel.userId()
         observeData()
     }

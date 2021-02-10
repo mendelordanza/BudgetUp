@@ -23,10 +23,6 @@ import kotlinx.android.synthetic.main.fragment_calculator.*
 
 @AndroidEntryPoint
 class CalculatorFragment : Fragment() {
-    companion object {
-        fun newInstance(param1: String, param2: String) = CalculatorFragment()
-    }
-
     private val calculatorViewModel: CalculatorViewModel by viewModels()
     private val args: CalculatorFragmentArgs by navArgs()
 
