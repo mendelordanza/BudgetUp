@@ -23,6 +23,7 @@ import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
 import com.ralphordanza.budgetup.framework.utils.Constants.EXPENSE
 import com.ralphordanza.budgetup.framework.utils.Constants.INCOME
 import com.ralphordanza.budgetup.framework.utils.DateHelper
+import com.ralphordanza.budgetup.framework.utils.ListHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 const val REQUEST_AMOUNT = "request_amount"
@@ -36,6 +37,8 @@ class AddTransactionFragment : Fragment() {
 
     private var _binding: FragmentAddTransactionBinding? = null
     private val binding get() = _binding!!
+
+    private var walletId = ""
 
     private lateinit var selectedWallet: Wallet
     private lateinit var selectedType: String
@@ -52,8 +55,7 @@ class AddTransactionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("ARGS", "check: ${arguments?.get("walletData")}")
-
+        viewModel.walletId()
         walletViewModel.userId()
         attachActions()
         listenAmount()
@@ -141,17 +143,24 @@ class AddTransactionFragment : Fragment() {
     }
 
     private fun observeData() {
+        viewModel.getWalletId().observe(viewLifecycleOwner, Observer {
+            walletId = it
+        })
+
         walletViewModel.getWallets().observe(viewLifecycleOwner, Observer { walletList ->
+            //SETUP WALLET DROPDOWN
             val walletSpinnerAdapter = ArrayAdapter(
                 requireContext(),
                 R.layout.support_simple_spinner_dropdown_item,
                 walletList.map { wallet -> wallet.name })
             binding.etWallet.adapter = walletSpinnerAdapter
 
-            if (walletList.isNotEmpty()) {
-                selectedWallet = walletList[0]
-            }
+            //SET INITIAL WALLET SELECTION
+            val initialPos = walletList.indexOf(ListHelper.getWalletFromList(walletList, walletId))
+            selectedWallet = walletList[initialPos]
+            binding.etWallet.setSelection(initialPos)
 
+            //LISTEN TO WALLET SELECTION
             binding.etWallet.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -160,6 +169,7 @@ class AddTransactionFragment : Fragment() {
                     id: Long
                 ) {
                     selectedWallet = walletList[position]
+                    viewModel.storeWalletId(selectedWallet.id)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -174,7 +184,6 @@ class AddTransactionFragment : Fragment() {
                 }
                 Status.SUCCESS -> {
                     resource.data?.let {
-
                         findNavController().popBackStack()
                     }
                 }

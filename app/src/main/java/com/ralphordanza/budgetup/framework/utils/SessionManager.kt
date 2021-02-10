@@ -14,6 +14,7 @@ class SessionManager @Inject constructor(context: Context) {
 
     companion object {
         val USER_ID = preferencesKey<String>("USER_ID")
+        val WALLET_ID = preferencesKey<String>("WALLET_ID")
     }
 
     suspend fun storeUserId(userId: String){
@@ -26,6 +27,15 @@ class SessionManager @Inject constructor(context: Context) {
         it[USER_ID] ?: ""
     }
 
+    suspend fun storeWalletId(walletId: String){
+        dataStore.edit {
+            it[WALLET_ID] = walletId
+        }
+    }
+
+    val walletIdFlow: Flow<String> = dataStore.data.map {
+        it[WALLET_ID] ?: ""
+    }
 
     suspend fun clearSession(){
         dataStore.edit {
