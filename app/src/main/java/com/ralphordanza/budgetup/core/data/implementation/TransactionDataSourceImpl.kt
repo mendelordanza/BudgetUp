@@ -1,8 +1,5 @@
 package com.ralphordanza.budgetup.core.data.implementation
 
-import android.util.Log
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.ralphordanza.budgetup.core.data.datasource.TransactionDataSource
@@ -10,7 +7,6 @@ import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.network.TransactionDto
 import com.ralphordanza.budgetup.core.domain.network.TransactionDtoMapper
-import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
 import com.ralphordanza.budgetup.framework.utils.DateHelper
 import kotlinx.coroutines.tasks.await
@@ -44,6 +40,7 @@ class TransactionDataSourceImpl @Inject constructor(
 
         val transactionsList = transactionDtoMapper.fromEntityList(
             firebaseFirestore.collection("transactions")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .whereEqualTo("userId", userId)
                 .whereEqualTo("walletId", walletId)
                 .get()
@@ -72,7 +69,7 @@ class TransactionDataSourceImpl @Inject constructor(
         walletId: String,
         type: String,
         note: String
-    ): Resource<DocumentReference> {
+    ): Resource<String> {
         return try {
             val utcDate = DateHelper.parseDate("MM/dd/yyyy", "yyyy-MM-dd'T'HH:mm:ss'Z'", date)
             val transaction = hashMapOf(
@@ -85,7 +82,8 @@ class TransactionDataSourceImpl @Inject constructor(
             )
             val docRef = firebaseFirestore.collection("transactions")
                 .add(transaction)
-            Resource.success(awaitTaskResult(docRef))
+            awaitTaskResult(docRef)
+            Resource.success("Transaction Created!")
         } catch (e: Exception) {
             Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }

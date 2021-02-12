@@ -10,7 +10,7 @@ interface WalletDataSource {
 
     suspend fun getTotal(userId: String): Double
 
-    suspend fun addWallet(userId: String, walletName: String, initialAmt: String): Resource<DocumentReference>
+    suspend fun addWallet(userId: String, walletName: String, initialAmt: String): Resource<String>
 
     suspend fun adjustWallet(wallet: Wallet)
 

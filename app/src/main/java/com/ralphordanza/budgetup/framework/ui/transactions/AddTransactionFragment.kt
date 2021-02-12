@@ -14,17 +14,23 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.datetime.datePicker
 import com.ralphordanza.budgetup.R
+import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.FragmentAddTransactionBinding
+import com.ralphordanza.budgetup.framework.ui.customview.LoadingDialog
 import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
+import com.ralphordanza.budgetup.framework.utils.Constants.AMOUNT
+import com.ralphordanza.budgetup.framework.utils.Constants.DATE
 import com.ralphordanza.budgetup.framework.utils.Constants.EXPENSE
 import com.ralphordanza.budgetup.framework.utils.Constants.INCOME
 import com.ralphordanza.budgetup.framework.utils.DateHelper
 import com.ralphordanza.budgetup.framework.utils.ListHelper
 import dagger.hilt.android.AndroidEntryPoint
+import splitties.toast.toast
 
 const val REQUEST_AMOUNT = "request_amount"
 const val AMOUNT_KEY = "amount_key"
@@ -42,6 +48,7 @@ class AddTransactionFragment : Fragment() {
 
     private lateinit var selectedWallet: Wallet
     private lateinit var selectedType: String
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +61,8 @@ class AddTransactionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loadingDialog = LoadingDialog(requireActivity())
 
         viewModel.walletId()
         walletViewModel.userId()
@@ -180,17 +189,28 @@ class AddTransactionFragment : Fragment() {
         viewModel.getIsTransactionAdded().observe(viewLifecycleOwner, Observer { resource ->
             when (resource.status) {
                 Status.LOADING -> {
-
+                    loadingDialog.startLoadingDialog()
                 }
                 Status.SUCCESS -> {
+                    loadingDialog.dismissLoadingDialog()
                     resource.data?.let {
+                        (activity as OnTransactionChange).onTransactionChange(it)
                         findNavController().popBackStack()
                     }
                 }
                 Status.ERROR -> {
-
+                    loadingDialog.dismissLoadingDialog()
+                    when(resource.data){
+                        AMOUNT -> binding.etAmount.error = resource.message
+                        DATE -> binding.etDate.error = resource.message
+                        else -> toast(resource.message ?: DEFAULT_ERROR_MESSAGE)
+                    }
                 }
             }
         })
+    }
+
+    interface OnTransactionChange {
+        fun onTransactionChange(message: String)
     }
 }

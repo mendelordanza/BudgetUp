@@ -3,6 +3,7 @@ package com.ralphordanza.budgetup.framework.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.animation.DecelerateInterpolator
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavArgument
@@ -20,19 +21,23 @@ import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
+import com.ralphordanza.budgetup.framework.extensions.snackbar
 import com.ralphordanza.budgetup.framework.ui.calculator.CalculatorFragment
 import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.login.LoginActivity
+import com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragment
+import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragment
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentArgs
+import com.ralphordanza.budgetup.framework.ui.wallets.AddWalletFragment
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.activities.start
 import splitties.toast.toast
 import splitties.views.imageResource
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AddTransactionFragment.OnTransactionChange, AddWalletFragment.OnWalletChange {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -49,22 +54,21 @@ class MainActivity : AppCompatActivity() {
         observerData()
     }
 
-    private fun setupNavigation(){
+    private fun setupNavigation() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
         setSupportActionBar(binding.appBar.toolbar)
         setupActionBarWithNavController(navController)
 
-        var walletData: NavArgument? = null
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            when(destination.id){
+            when (destination.id) {
                 R.id.homeFragment -> {
-                    supportActionBar?.hide()
                     binding.fab.setOnClickListener {
                         val action = HomeFragmentDirections.actionHomeFragmentToAddWalletFragment()
                         navController.navigate(action)
                     }
+                    hideToolbar()
                     showBottomAppBar()
 
                     binding.fab.hide()
@@ -72,11 +76,11 @@ class MainActivity : AppCompatActivity() {
                     binding.fab.show()
                 }
                 R.id.transactionsFragment -> {
-                    supportActionBar?.show()
                     binding.fab.setOnClickListener {
                         val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment()
                         navController.navigate(action)
                     }
+                    showToolbar()
                     showBottomAppBar()
 
                     binding.fab.hide()
@@ -84,18 +88,18 @@ class MainActivity : AppCompatActivity() {
                     binding.fab.show()
                 }
                 R.id.calculatorFragment -> {
-                    supportActionBar?.show()
                     supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_check)
+                    showToolbar()
                     hideBottomAppBar()
                     binding.fab.hide()
                 }
                 R.id.addWalletFragment -> {
-                    supportActionBar?.show()
+                    showToolbar()
                     hideBottomAppBar()
                     binding.fab.hide()
                 }
                 R.id.addTransactionFragment -> {
-                    supportActionBar?.show()
+                    showToolbar()
                     hideBottomAppBar()
                     binding.fab.hide()
                 }
@@ -103,38 +107,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideBottomAppBar(){
+    private fun showToolbar(){
+        supportActionBar?.show()
+    }
+
+    private fun hideToolbar(){
+        supportActionBar?.hide()
+    }
+
+    private fun hideBottomAppBar() {
         binding.bottomAppBar.performHide()
     }
 
-    private fun showBottomAppBar(){
+    private fun showBottomAppBar() {
         binding.bottomAppBar.performShow()
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return if(navController.currentDestination?.id == R.id.calculatorFragment){
+        return if (navController.currentDestination?.id == R.id.calculatorFragment) {
             setResultFromCalculator()
             true
-        } else{
+        } else {
             navController.navigateUp() || super.onSupportNavigateUp()
         }
     }
 
     override fun onBackPressed() {
-        return if(navController.currentDestination?.id == R.id.calculatorFragment){
+        return if (navController.currentDestination?.id == R.id.calculatorFragment) {
             setResultFromCalculator()
-        } else{
+        } else {
             super.onBackPressed()
         }
     }
 
-    private fun setResultFromCalculator(){
+    private fun setResultFromCalculator() {
         val fragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         val frag = fragment?.childFragmentManager?.fragments?.get(0) as CalculatorFragment
         frag.checkResult()
     }
 
-    private fun attachActions(){
+    private fun attachActions() {
         binding.bottomAppBar.setNavigationOnClickListener {
             MaterialDialog(this, BottomSheet())
                 .customView(R.layout.bottom_sheet)
@@ -142,21 +154,21 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
         binding.bottomAppBar.setOnMenuItemClickListener {
-            if(it.itemId == R.id.bottom_nav_more){
+            if (it.itemId == R.id.bottom_nav_more) {
                 loginViewModel.logout()
             }
             true
         }
     }
 
-    private fun observerData(){
+    private fun observerData() {
         loginViewModel.getLogout().observe(this, Observer { resource ->
-            when(resource.status){
+            when (resource.status) {
                 Status.LOADING -> {
 
                 }
                 Status.SUCCESS -> {
-                    if(resource.data == null){
+                    if (resource.data == null) {
                         loginViewModel.clearSession()
                         start<LoginActivity>()
                         finishAffinity()
@@ -167,5 +179,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    override fun onTransactionChange(message: String) {
+        message.snackbar(binding.root, binding.fab)
+    }
+
+    override fun onWalletChange(message: String) {
+        message.snackbar(binding.root, binding.fab)
     }
 }

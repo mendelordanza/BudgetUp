@@ -12,11 +12,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.findNavController
 import com.ralphordanza.budgetup.R
+import com.ralphordanza.budgetup.core.domain.model.Resource
 import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.databinding.FragmentAddWalletBinding
+import com.ralphordanza.budgetup.framework.ui.customview.LoadingDialog
 import com.ralphordanza.budgetup.framework.ui.transactions.AMOUNT_KEY
 import com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.transactions.REQUEST_AMOUNT
+import com.ralphordanza.budgetup.framework.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
 
@@ -30,6 +33,7 @@ class AddWalletFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val walletViewModel: WalletViewModel by viewModels()
+    private lateinit var loadingDialog: LoadingDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +46,8 @@ class AddWalletFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loadingDialog = LoadingDialog(requireActivity())
 
         walletViewModel.userId()
         setupAssets()
@@ -104,15 +110,28 @@ class AddWalletFragment : Fragment() {
         walletViewModel.getIsAdded().observe(viewLifecycleOwner, Observer { resource ->
             when(resource.status){
                 Status.LOADING -> {
-
+                    loadingDialog.startLoadingDialog()
                 }
                 Status.SUCCESS -> {
-                    findNavController().popBackStack()
+                    loadingDialog.dismissLoadingDialog()
+                    resource.data?.let {
+                        (activity as OnWalletChange).onWalletChange(it)
+                        findNavController().popBackStack()
+                    }
                 }
                 Status.ERROR -> {
-                    toast(resource.message.toString())
+                    loadingDialog.dismissLoadingDialog()
+                    when(resource.data){
+                        Constants.WALLET_NAME -> binding.etName.error = resource.message
+                        Constants.AMOUNT -> binding.etAmount.error = resource.message
+                        else -> toast(resource.message ?: Resource.DEFAULT_ERROR_MESSAGE)
+                    }
                 }
             }
         })
+    }
+
+    interface OnWalletChange {
+        fun onWalletChange(message: String)
     }
 }

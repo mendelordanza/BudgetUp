@@ -30,8 +30,8 @@ class WalletViewModel @ViewModelInject constructor(
     private val total = MutableLiveData<Double>()
     fun getTotal(): LiveData<Double> = total
 
-    private val isAdded = MutableLiveData<Resource<DocumentReference>>()
-    fun getIsAdded(): LiveData<Resource<DocumentReference>> = isAdded
+    private val isAdded = MutableLiveData<Resource<String>>()
+    fun getIsAdded(): LiveData<Resource<String>> = isAdded
 
     fun userId() = viewModelScope.launch {
         sessionManager.userIdFlow.collect {

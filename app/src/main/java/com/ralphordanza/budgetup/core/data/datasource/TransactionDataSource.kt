@@ -16,7 +16,7 @@ interface TransactionDataSource {
         walletId: String,
         type: String,
         note: String
-    ): Resource<DocumentReference>
+    ): Resource<String>
 
     suspend fun updateTransaction(transaction: Transaction)
 

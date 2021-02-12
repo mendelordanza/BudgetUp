@@ -48,7 +48,7 @@ class WalletDataSourceImpl @Inject constructor(
         userId: String,
         walletName: String,
         initialAmt: String
-    ): Resource<DocumentReference> {
+    ): Resource<String> {
         return try {
             val wallet = hashMapOf(
                 "name" to walletName,
@@ -59,7 +59,8 @@ class WalletDataSourceImpl @Inject constructor(
                 .document(userId)
                 .collection("wallets")
                 .add(wallet)
-            Resource.success(awaitTaskResult(docRef))
+            awaitTaskResult(docRef)
+            Resource.success("Wallet created!")
         } catch (e: Exception) {
             Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }
