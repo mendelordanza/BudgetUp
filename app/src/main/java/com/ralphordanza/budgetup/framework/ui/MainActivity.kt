@@ -21,6 +21,7 @@ import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
+import com.ralphordanza.budgetup.framework.extensions.setSafeOnClickListener
 import com.ralphordanza.budgetup.framework.extensions.snackbar
 import com.ralphordanza.budgetup.framework.ui.calculator.CalculatorFragment
 import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity(), AddTransactionFragment.OnTransactionCh
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
                 R.id.homeFragment -> {
-                    binding.fab.setOnClickListener {
+                    binding.fab.setSafeOnClickListener {
                         val action = HomeFragmentDirections.actionHomeFragmentToAddWalletFragment()
                         navController.navigate(action)
                     }
@@ -76,7 +77,7 @@ class MainActivity : AppCompatActivity(), AddTransactionFragment.OnTransactionCh
                     binding.fab.show()
                 }
                 R.id.transactionsFragment -> {
-                    binding.fab.setOnClickListener {
+                    binding.fab.setSafeOnClickListener {
                         val action = TransactionsFragmentDirections.actionTransactionsFragmentToAddTransactionFragment()
                         navController.navigate(action)
                     }

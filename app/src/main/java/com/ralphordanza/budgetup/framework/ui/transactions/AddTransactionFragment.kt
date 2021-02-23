@@ -21,6 +21,7 @@ import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ER
 import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.FragmentAddTransactionBinding
+import com.ralphordanza.budgetup.framework.extensions.hideKeyboard
 import com.ralphordanza.budgetup.framework.ui.customview.LoadingDialog
 import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
 import com.ralphordanza.budgetup.framework.utils.Constants.AMOUNT
@@ -127,6 +128,7 @@ class AddTransactionFragment : Fragment() {
         }
 
         binding.etAmount.setOnClickListener {
+            hideKeyboard()
             val action =
                 AddTransactionFragmentDirections.actionAddTransactionFragmentToCalculatorFragment(
                     binding.etAmount.text.toString()
