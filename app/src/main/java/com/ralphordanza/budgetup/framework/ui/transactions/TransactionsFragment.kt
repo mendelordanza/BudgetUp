@@ -71,8 +71,14 @@ class TransactionsFragment : Fragment() {
     private fun observeData() {
         viewModel.getUserId().observe(viewLifecycleOwner, Observer {
             if(it.isNotEmpty()){
+                viewModel.getTotalTransactions(it, args.walletData.id, args.walletData.amount.toDouble())
                 viewModel.loadTransactions(it, args.walletData.id)
             }
+        })
+
+        viewModel.getTotalTransactions().observe(viewLifecycleOwner, Observer {
+            binding.txtAmount.text = it.getDecimalString()
+            //TODO update wallet initial amount
         })
 
         viewModel.getTransactions().observe(viewLifecycleOwner, Observer {

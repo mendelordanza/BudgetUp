@@ -19,5 +19,6 @@ data class Interactors(
 
     //Transaction
     val addTransaction: AddTransaction,
-    val getTransactions: GetTransactions
+    val getTransactions: GetTransactions,
+    val getTotalTransactions: GetTotalTransactions
 )

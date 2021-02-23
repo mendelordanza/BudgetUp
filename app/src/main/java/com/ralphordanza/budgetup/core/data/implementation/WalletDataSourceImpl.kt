@@ -4,6 +4,7 @@ import com.google.firebase.firestore.*
 import com.ralphordanza.budgetup.core.data.datasource.WalletDataSource
 import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
+import com.ralphordanza.budgetup.core.domain.network.TransactionDto
 import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.core.domain.network.WalletDtoMapper
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult

@@ -1,5 +1,6 @@
 package com.ralphordanza.budgetup.core.data.implementation
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.ralphordanza.budgetup.core.data.datasource.TransactionDataSource
@@ -7,7 +8,9 @@ import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.network.TransactionDto
 import com.ralphordanza.budgetup.core.domain.network.TransactionDtoMapper
+import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
+import com.ralphordanza.budgetup.framework.utils.Constants.EXPENSE
 import com.ralphordanza.budgetup.framework.utils.DateHelper
 import kotlinx.coroutines.tasks.await
 import org.mariuszgromada.math.mxparser.*
@@ -60,6 +63,27 @@ class TransactionDataSourceImpl @Inject constructor(
         }
 
         return transactionSections
+    }
+
+    override suspend fun getTotalTransaction(userId: String, walletId: String, initialAmt: Double): Double {
+        var total = initialAmt
+        transactionDtoMapper.fromEntityList(
+            firebaseFirestore.collection("transactions")
+                .whereEqualTo("userId", userId)
+                .whereEqualTo("walletId", walletId)
+                .get()
+                .await()
+                .toObjects(TransactionDto::class.java)
+        ).forEach {
+            Log.d("CHECK", "it: ${it.walletId}")
+            if(it.type == EXPENSE){
+                total -= it.amount.toDouble()
+            }
+            else{
+                total += it.amount.toDouble()
+            }
+        }
+        return total
     }
 
     override suspend fun addTransaction(

@@ -74,6 +74,11 @@ object DataModule {
     }
 
     @Provides
+    fun provideGetTotalTransactions(transactionRepository: TransactionRepository) : GetTotalTransactions {
+        return GetTotalTransactions(transactionRepository)
+    }
+
+    @Provides
     fun provideInteractors(
         registerUser: RegisterUser,
         saveToFirestore: SaveToFirestore,
@@ -86,7 +91,8 @@ object DataModule {
         deleteWallet: DeleteWallet,
         calculatorCompute: CalculatorCompute,
         addTransaction: AddTransaction,
-        getTransactions: GetTransactions
+        getTransactions: GetTransactions,
+        getTotalTransactions: GetTotalTransactions
     ) : Interactors {
         return Interactors(
             registerUser,
@@ -100,7 +106,8 @@ object DataModule {
             deleteWallet,
             calculatorCompute,
             addTransaction,
-            getTransactions
+            getTransactions,
+            getTotalTransactions
         )
     }
 }
