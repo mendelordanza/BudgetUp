@@ -11,10 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.databinding.FragmentTransactionsBinding
 import com.ralphordanza.budgetup.core.domain.model.Transaction
 import com.ralphordanza.budgetup.core.domain.model.TransactionSection
 import com.ralphordanza.budgetup.framework.extensions.getDecimalString
+import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
 import com.ralphordanza.budgetup.framework.utils.DateHelper
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
@@ -32,7 +34,9 @@ class TransactionsFragment : Fragment() {
     private var _binding: FragmentTransactionsBinding? = null
     private val binding get() = _binding!!
 
+    private var userId = ""
     private val viewModel: TransactionViewModel by viewModels()
+    private val walletViewModel: WalletViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,7 +75,28 @@ class TransactionsFragment : Fragment() {
     private fun observeData() {
         viewModel.getUserId().observe(viewLifecycleOwner, Observer {
             if(it.isNotEmpty()){
+                userId = it
+                viewModel.getTotalTransactions(it, args.walletData.id, args.walletData.amount.toDouble())
                 viewModel.loadTransactions(it, args.walletData.id)
+            }
+        })
+
+        viewModel.getTotalTransactions().observe(viewLifecycleOwner, Observer {
+            binding.txtAmount.text = it.getDecimalString()
+            if(it != 0.0){
+                walletViewModel.updateWalletAmount(it.getDecimalString(), args.walletData.id, userId)
+            }
+        })
+
+        walletViewModel.getIsUpdated().observe(viewLifecycleOwner, Observer { resource ->
+            when(resource.status){
+                Status.LOADING -> {
+                }
+                Status.SUCCESS -> {
+                }
+                Status.ERROR -> {
+                    Log.d("UPDATE","wallet: ${resource.message.toString()}")
+                }
             }
         })
 

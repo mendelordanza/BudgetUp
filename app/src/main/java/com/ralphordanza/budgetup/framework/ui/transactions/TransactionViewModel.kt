@@ -29,8 +29,15 @@ class TransactionViewModel @ViewModelInject constructor(
     private val isTransactionAdded = MutableLiveData<Resource<String>>()
     fun getIsTransactionAdded(): LiveData<Resource<String>> = isTransactionAdded
 
+    private val totalTransactions = MutableLiveData<Double>()
+    fun getTotalTransactions(): LiveData<Double> = totalTransactions
+
     fun loadTransactions(userId: String, walletId: String) = viewModelScope.launch {
         transactions.postValue(interactors.getTransactions(userId, walletId))
+    }
+
+    fun getTotalTransactions(userId: String, walletId: String, initialAmt: Double) = viewModelScope.launch {
+        totalTransactions.postValue(interactors.getTotalTransactions(userId, walletId, initialAmt))
     }
 
     fun userId() = viewModelScope.launch {

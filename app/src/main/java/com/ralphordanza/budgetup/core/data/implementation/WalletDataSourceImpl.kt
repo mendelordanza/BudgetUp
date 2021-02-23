@@ -1,12 +1,13 @@
 package com.ralphordanza.budgetup.core.data.implementation
 
+import android.util.Log
 import com.google.firebase.firestore.*
 import com.ralphordanza.budgetup.core.data.datasource.WalletDataSource
 import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.core.domain.network.WalletDtoMapper
-import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
+import com.ralphordanza.budgetup.framework.utils.Constants.INCOME
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import javax.inject.Inject
@@ -55,11 +56,30 @@ class WalletDataSourceImpl @Inject constructor(
                 "amount" to initialAmt,
                 "createdAt" to FieldValue.serverTimestamp()
             )
-            val docRef = firebaseFirestore.collection("users")
+            firebaseFirestore.collection("users")
                 .document(userId)
                 .collection("wallets")
                 .add(wallet)
-            awaitTaskResult(docRef)
+
+            val walletData = firebaseFirestore.collection("users")
+                .document(userId)
+                .collection("wallets")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
+                .await()
+                .toObjects(WalletDto::class.java)[0]
+
+            val transaction = hashMapOf(
+                "amount" to walletData.amount,
+                "createdAt" to FieldValue.serverTimestamp(),
+                "note" to "Initial Amount",
+                "type" to INCOME,
+                "userId" to userId,
+                "walletId" to  walletData.id
+            )
+            firebaseFirestore.collection("transactions")
+                .add(transaction)
+
             Resource.success("Wallet created!")
         } catch (e: Exception) {
             Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
@@ -68,6 +88,19 @@ class WalletDataSourceImpl @Inject constructor(
 
     override suspend fun adjustWallet(wallet: Wallet) {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun updateWalletAmount(updatedAmt: String, walletId: String, userId: String): Resource<String> {
+        return try {
+            firebaseFirestore.collection("users")
+                .document(userId)
+                .collection("wallets")
+                .document(walletId)
+                .update("amount", updatedAmt)
+            Resource.success("Wallet amount updated!")
+        } catch (e: Exception) {
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
+        }
     }
 
     override suspend fun deleteWallet(userId: String, wallet: Wallet) {

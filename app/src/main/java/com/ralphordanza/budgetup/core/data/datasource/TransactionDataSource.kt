@@ -9,6 +9,8 @@ interface TransactionDataSource {
 
     suspend fun getTransactions(userId: String, walletId: String): List<TransactionSection>
 
+    suspend fun getTotalTransaction(userId: String, walletId: String, initialAmt: Double): Double
+
     suspend fun addTransaction(
         amount: String,
         userId: String,

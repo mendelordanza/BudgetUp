@@ -6,14 +6,20 @@ import javax.inject.Inject
 
 class TransactionRepository @Inject constructor(private val transactionDataSource: TransactionDataSource) {
 
-    suspend fun getTransactions(userId: String, walletId: String) = transactionDataSource.getTransactions(userId, walletId)
+    suspend fun getTransactions(userId: String, walletId: String) =
+        transactionDataSource.getTransactions(userId, walletId)
 
-    suspend fun addTransaction(amount: String,
-                               userId: String,
-                               date: String,
-                               walletId: String,
-                               type: String,
-                               note: String) =
+    suspend fun getTotalTransactions(userId: String, walletId: String, initialAmt: Double) =
+        transactionDataSource.getTotalTransaction(userId, walletId, initialAmt)
+
+    suspend fun addTransaction(
+        amount: String,
+        userId: String,
+        date: String,
+        walletId: String,
+        type: String,
+        note: String
+    ) =
         transactionDataSource.addTransaction(amount, userId, date, walletId, type, note)
 
     suspend fun updateTransaction(transaction: Transaction) =

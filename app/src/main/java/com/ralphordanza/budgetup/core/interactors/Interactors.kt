@@ -13,11 +13,13 @@ data class Interactors(
     val getTotal: GetTotal,
     val addWallet: AddWallet,
     val deleteWallet: DeleteWallet,
+    val updateWalletAmount: UpdateWalletAmount,
 
     //Calculator
     val calculatorCompute: CalculatorCompute,
 
     //Transaction
     val addTransaction: AddTransaction,
-    val getTransactions: GetTransactions
+    val getTransactions: GetTransactions,
+    val getTotalTransactions: GetTotalTransactions
 )

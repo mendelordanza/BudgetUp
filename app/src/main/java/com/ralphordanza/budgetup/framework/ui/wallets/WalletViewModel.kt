@@ -33,6 +33,9 @@ class WalletViewModel @ViewModelInject constructor(
     private val isAdded = MutableLiveData<Resource<String>>()
     fun getIsAdded(): LiveData<Resource<String>> = isAdded
 
+    private val isUpdated = MutableLiveData<Resource<String>>()
+    fun getIsUpdated(): LiveData<Resource<String>> = isUpdated
+
     fun userId() = viewModelScope.launch {
         sessionManager.userIdFlow.collect {
             userId.value = it
@@ -50,6 +53,11 @@ class WalletViewModel @ViewModelInject constructor(
     fun addWallet(userId: String, walletName: String, initialAmt: String) = viewModelScope.launch {
         isAdded.value = Resource.loading(null)
         isAdded.value = interactors.addWallet(userId, walletName, initialAmt)
+    }
+
+    fun updateWalletAmount(updateAmt: String, walletId: String, userId: String) = viewModelScope.launch {
+        isUpdated.value = Resource.loading(null)
+        isUpdated.value = interactors.updateWalletAmount(updateAmt, walletId, userId)
     }
 
     fun deleteWallet(userId: String, wallet: Wallet) = viewModelScope.launch{
