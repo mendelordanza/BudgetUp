@@ -97,11 +97,13 @@ class AddWalletFragment : Fragment() {
         binding.btnAdd.setOnClickListener {
             walletViewModel.getUserId()
                 .observe(viewLifecycleOwner, Observer {
-                    walletViewModel.addWallet(
-                        it,
-                        binding.etName.text.toString(),
-                        binding.etAmount.text.toString()
-                    )
+                    if(it.isNotEmpty()){
+                        walletViewModel.addWallet(
+                            it,
+                            binding.etName.text.toString(),
+                            binding.etAmount.text.toString()
+                        )
+                    }
                 })
         }
     }

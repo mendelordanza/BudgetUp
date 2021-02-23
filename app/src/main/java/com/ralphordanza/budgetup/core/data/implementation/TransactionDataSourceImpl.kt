@@ -66,7 +66,7 @@ class TransactionDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getTotalTransaction(userId: String, walletId: String, initialAmt: Double): Double {
-        var total = initialAmt
+        var total = 0.0
         transactionDtoMapper.fromEntityList(
             firebaseFirestore.collection("transactions")
                 .whereEqualTo("userId", userId)
@@ -75,7 +75,6 @@ class TransactionDataSourceImpl @Inject constructor(
                 .await()
                 .toObjects(TransactionDto::class.java)
         ).forEach {
-            Log.d("CHECK", "it: ${it.walletId}")
             if(it.type == EXPENSE){
                 total -= it.amount.toDouble()
             }
@@ -118,7 +117,8 @@ class TransactionDataSourceImpl @Inject constructor(
     }
 
     override suspend fun deleteTransaction(transaction: Transaction) {
-        TODO("Not yet implemented")
+        firebaseFirestore.collection("transactions")
+            .document("")
     }
 
     override suspend fun calculate(expression: String): Double {
