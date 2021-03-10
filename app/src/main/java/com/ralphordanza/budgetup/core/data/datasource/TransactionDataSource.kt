@@ -22,7 +22,7 @@ interface TransactionDataSource {
 
     suspend fun updateTransaction(transaction: Transaction)
 
-    suspend fun deleteTransaction(transaction: Transaction)
+    suspend fun deleteTransaction(transaction: Transaction): Resource<String>
 
     suspend fun calculate(expression: String): Double
 }

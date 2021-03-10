@@ -30,6 +30,7 @@ import com.ralphordanza.budgetup.framework.utils.Constants.EXPENSE
 import com.ralphordanza.budgetup.framework.utils.Constants.INCOME
 import com.ralphordanza.budgetup.framework.utils.DateHelper
 import com.ralphordanza.budgetup.framework.utils.ListHelper
+import com.ralphordanza.budgetup.framework.utils.SnackbarListener
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
 
@@ -196,7 +197,7 @@ class AddTransactionFragment : Fragment() {
                 Status.SUCCESS -> {
                     loadingDialog.dismissLoadingDialog()
                     resource.data?.let {
-                        (activity as OnTransactionChange).onTransactionChange(it)
+                        (activity as SnackbarListener).onTransactionChange(it)
                         findNavController().popBackStack()
                     }
                 }
@@ -210,9 +211,5 @@ class AddTransactionFragment : Fragment() {
                 }
             }
         })
-    }
-
-    interface OnTransactionChange {
-        fun onTransactionChange(message: String)
     }
 }

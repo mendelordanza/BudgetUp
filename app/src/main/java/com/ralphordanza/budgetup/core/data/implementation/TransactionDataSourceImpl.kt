@@ -1,6 +1,6 @@
 package com.ralphordanza.budgetup.core.data.implementation
 
-import android.util.Log
+import com.google.android.gms.common.util.CollectionUtils.listOf
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.ralphordanza.budgetup.core.data.datasource.TransactionDataSource
@@ -8,7 +8,6 @@ import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.network.TransactionDto
 import com.ralphordanza.budgetup.core.domain.network.TransactionDtoMapper
-import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.framework.extensions.awaitTaskResult
 import com.ralphordanza.budgetup.framework.utils.Constants.EXPENSE
 import com.ralphordanza.budgetup.framework.utils.DateHelper
@@ -116,9 +115,15 @@ class TransactionDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteTransaction(transaction: Transaction) {
-        firebaseFirestore.collection("transactions")
-            .document("")
+    override suspend fun deleteTransaction(transaction: Transaction): Resource<String> {
+        return try {
+            firebaseFirestore.collection("transactions")
+                .document(transaction.id)
+                .delete()
+            Resource.success("Transaction deleted")
+        } catch (e: Exception) {
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
+        }
     }
 
     override suspend fun calculate(expression: String): Double {

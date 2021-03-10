@@ -10,7 +10,9 @@ import com.ralphordanza.budgetup.core.domain.model.Resource
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import com.ralphordanza.budgetup.framework.utils.SessionManager
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class WalletViewModel @ViewModelInject constructor(
@@ -19,7 +21,12 @@ class WalletViewModel @ViewModelInject constructor(
 ) :
     ViewModel() {
 
-    fun getSessionManager() = sessionManager
+    sealed class WalletEvent{
+        class WalletDeleteEvent(val resource: Resource<String>): WalletEvent()
+    }
+
+    private val eventChannel = Channel<WalletEvent>()
+    val eventFlow = eventChannel.receiveAsFlow()
 
     private val userId = MutableLiveData<String>()
     fun getUserId(): LiveData<String> = userId
@@ -61,6 +68,6 @@ class WalletViewModel @ViewModelInject constructor(
     }
 
     fun deleteWallet(userId: String, wallet: Wallet) = viewModelScope.launch{
-        interactors.deleteWallet(userId, wallet)
+        eventChannel.send(WalletEvent.WalletDeleteEvent(interactors.deleteWallet(userId, wallet)))
     }
 }

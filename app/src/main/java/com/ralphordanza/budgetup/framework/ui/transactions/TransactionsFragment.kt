@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ralphordanza.budgetup.core.domain.model.Status
@@ -18,7 +19,10 @@ import com.ralphordanza.budgetup.core.domain.model.TransactionSection
 import com.ralphordanza.budgetup.framework.extensions.getDecimalString
 import com.ralphordanza.budgetup.framework.ui.wallets.WalletViewModel
 import com.ralphordanza.budgetup.framework.utils.DateHelper
+import com.ralphordanza.budgetup.framework.utils.SnackbarListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import splitties.toast.toast
 
 @AndroidEntryPoint
@@ -62,10 +66,20 @@ class TransactionsFragment : Fragment() {
     }
 
     private fun setupTransactionList() {
-        headerTransactionAdapter = HeaderTransactionAdapter { trans ->
+        headerTransactionAdapter = HeaderTransactionAdapter({ trans ->
             //TODO onClick edit transaction
             toast(trans.note)
-        }
+        }, { type, transaction ->
+            when (type) {
+                0 -> { //Edit
+
+                }
+                1 -> { //Delete
+                    viewModel.deleteTransaction(transaction)
+                    viewModel.userId()
+                }
+            }
+        })
         binding.rvGroupedTransactions.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = headerTransactionAdapter
@@ -74,7 +88,7 @@ class TransactionsFragment : Fragment() {
 
     private fun observeData() {
         viewModel.getUserId().observe(viewLifecycleOwner, Observer {
-            if(it.isNotEmpty()){
+            if (it.isNotEmpty()) {
                 userId = it
                 viewModel.getTotalTransactions(it, args.walletData.id, args.walletData.amount.toDouble())
                 viewModel.loadTransactions(it, args.walletData.id)
@@ -83,19 +97,19 @@ class TransactionsFragment : Fragment() {
 
         viewModel.getTotalTransactions().observe(viewLifecycleOwner, Observer {
             binding.txtAmount.text = it.getDecimalString()
-            if(it != 0.0){
+            if (it != 0.0) {
                 walletViewModel.updateWalletAmount(it.getDecimalString(), args.walletData.id, userId)
             }
         })
 
         walletViewModel.getIsUpdated().observe(viewLifecycleOwner, Observer { resource ->
-            when(resource.status){
+            when (resource.status) {
                 Status.LOADING -> {
                 }
                 Status.SUCCESS -> {
                 }
                 Status.ERROR -> {
-                    Log.d("UPDATE","wallet: ${resource.message.toString()}")
+                    Log.d("UPDATE", "wallet: ${resource.message.toString()}")
                 }
             }
         })
@@ -103,5 +117,26 @@ class TransactionsFragment : Fragment() {
         viewModel.getTransactions().observe(viewLifecycleOwner, Observer {
             headerTransactionAdapter.submitList(it)
         })
+
+        lifecycleScope.launch {
+            viewModel.eventFlow.collect { event ->
+                when(event){
+                    is TransactionViewModel.TransactionEvent.TransactionDeleteEvent -> {
+                        when (event.resource.status) {
+                            Status.LOADING -> {
+                            }
+                            Status.SUCCESS -> {
+                                event.resource.data?.let{
+                                    (activity as SnackbarListener).onTransactionChange(it)
+                                }
+                            }
+                            Status.ERROR -> {
+                                toast(event.resource.message.toString())
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

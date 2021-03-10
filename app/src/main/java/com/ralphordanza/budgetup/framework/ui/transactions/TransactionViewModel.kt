@@ -9,13 +9,22 @@ import com.google.firebase.firestore.DocumentReference
 import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.interactors.Interactors
 import com.ralphordanza.budgetup.framework.utils.SessionManager
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class TransactionViewModel @ViewModelInject constructor(
     private val interactors: Interactors,
     private val sessionManager: SessionManager
 ) : ViewModel() {
+
+    sealed class TransactionEvent{
+        class TransactionDeleteEvent(val resource: Resource<String>): TransactionEvent()
+    }
+
+    private val eventChannel = Channel<TransactionEvent>()
+    val eventFlow = eventChannel.receiveAsFlow()
 
     private val transactions = MutableLiveData<List<TransactionSection>>()
     fun getTransactions(): LiveData<List<TransactionSection>> = transactions
@@ -66,5 +75,9 @@ class TransactionViewModel @ViewModelInject constructor(
     ) = viewModelScope.launch {
         isTransactionAdded.value = Resource.loading(null)
         isTransactionAdded.value = interactors.addTransaction(amount, userId, date, walletId, type, note)
+    }
+
+    fun deleteTransaction(transaction: Transaction) = viewModelScope.launch {
+        eventChannel.send(TransactionEvent.TransactionDeleteEvent(interactors.deleteTransaction(transaction)))
     }
 }

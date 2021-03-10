@@ -103,11 +103,16 @@ class WalletDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteWallet(userId: String, wallet: Wallet) {
-        firebaseFirestore.collection("users")
-            .document(userId)
-            .collection("wallets")
-            .document(wallet.id)
-            .delete()
+    override suspend fun deleteWallet(userId: String, wallet: Wallet): Resource<String> {
+        return try {
+            firebaseFirestore.collection("users")
+                .document(userId)
+                .collection("wallets")
+                .document(wallet.id)
+                .delete()
+            Resource.success("${wallet.name} deleted!")
+        } catch (e: Exception) {
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
+        }
     }
 }

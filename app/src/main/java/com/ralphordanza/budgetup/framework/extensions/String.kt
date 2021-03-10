@@ -12,3 +12,11 @@ fun String.snackbar(view: View, anchorView: View) {
         .show()
 
 }
+
+fun String.snackbar(view: View) {
+    Snackbar.make(
+        view,
+        this,
+        Snackbar.LENGTH_SHORT
+    ).show()
+}

@@ -32,13 +32,14 @@ import com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragmen
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragment
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentArgs
 import com.ralphordanza.budgetup.framework.ui.wallets.AddWalletFragment
+import com.ralphordanza.budgetup.framework.utils.SnackbarListener
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.activities.start
 import splitties.toast.toast
 import splitties.views.imageResource
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), AddTransactionFragment.OnTransactionChange, AddWalletFragment.OnWalletChange {
+class MainActivity : AppCompatActivity(), SnackbarListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController

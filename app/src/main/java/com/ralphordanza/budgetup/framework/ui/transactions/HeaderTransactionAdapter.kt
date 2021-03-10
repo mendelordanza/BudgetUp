@@ -11,7 +11,10 @@ import com.ralphordanza.budgetup.databinding.ItemTransactionHeaderBinding
 import com.ralphordanza.budgetup.core.domain.model.Transaction
 import com.ralphordanza.budgetup.core.domain.model.TransactionSection
 
-class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -> Unit) :
+class HeaderTransactionAdapter(
+    private val onClick: (transaction: Transaction) -> Unit,
+    private val onMenuClick: (Int, Transaction) -> Unit
+) :
     ListAdapter<TransactionSection, HeaderTransactionAdapter.ViewHolder>(DiffCallback()) {
 
     private lateinit var binding: ItemTransactionHeaderBinding
@@ -36,7 +39,7 @@ class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -
     inner class ViewHolder(private val binding: ItemTransactionHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(transactionSection: TransactionSection) {
-            if(transactionSection.items.isNotEmpty()){
+            if (transactionSection.items.isNotEmpty()) {
                 val params = binding.root.layoutParams
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT
                 params.width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -44,17 +47,21 @@ class HeaderTransactionAdapter(private val onClick: (transaction: Transaction) -
 
                 binding.txtMonth.text = transactionSection.month
 
-                val itemTransactionAdapter = ItemTransactionAdapter { transaction ->
-                    //On Item Click
-                    onClick(transaction)
-                }
+                val itemTransactionAdapter = ItemTransactionAdapter(
+                    { transaction ->
+                        //On Item Click
+                        onClick(transaction)
+                    },
+                    { type, transaction ->
+                        onMenuClick(type, transaction)
+                    }
+                )
                 binding.rvTransactions.apply {
                     layoutManager = LinearLayoutManager(binding.root.context)
                     adapter = itemTransactionAdapter
                 }
                 itemTransactionAdapter.submitList(transactionSection.items)
-            }
-            else{
+            } else {
                 val params = binding.root.layoutParams
                 params.height = 0
                 params.width = 0

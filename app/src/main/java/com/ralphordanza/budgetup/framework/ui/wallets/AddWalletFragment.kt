@@ -21,6 +21,7 @@ import com.ralphordanza.budgetup.framework.ui.transactions.AMOUNT_KEY
 import com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.transactions.REQUEST_AMOUNT
 import com.ralphordanza.budgetup.framework.utils.Constants
+import com.ralphordanza.budgetup.framework.utils.SnackbarListener
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.toast.toast
 
@@ -119,7 +120,7 @@ class AddWalletFragment : Fragment() {
                 Status.SUCCESS -> {
                     loadingDialog.dismissLoadingDialog()
                     resource.data?.let {
-                        (activity as OnWalletChange).onWalletChange(it)
+                        (activity as SnackbarListener).onWalletChange(it)
                         findNavController().popBackStack()
                     }
                 }
@@ -133,9 +134,5 @@ class AddWalletFragment : Fragment() {
                 }
             }
         })
-    }
-
-    interface OnWalletChange {
-        fun onWalletChange(message: String)
     }
 }
