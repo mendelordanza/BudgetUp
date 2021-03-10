@@ -23,6 +23,7 @@ class WalletViewModel @ViewModelInject constructor(
 
     sealed class WalletEvent{
         class WalletDeleteEvent(val resource: Resource<String>): WalletEvent()
+        class WalletEditEvent(val resource: Resource<String>): WalletEvent()
     }
 
     private val eventChannel = Channel<WalletEvent>()
@@ -65,6 +66,11 @@ class WalletViewModel @ViewModelInject constructor(
     fun updateWalletAmount(updateAmt: String, walletId: String, userId: String) = viewModelScope.launch {
         isUpdated.value = Resource.loading(null)
         isUpdated.value = interactors.updateWalletAmount(updateAmt, walletId, userId)
+    }
+
+    fun updateWallet(updateAmt: String, updateName: String, walletId: String, userId: String) = viewModelScope.launch {
+        isUpdated.value = Resource.loading(null)
+        isUpdated.value = interactors.updateWallet(updateAmt, updateName, walletId, userId)
     }
 
     fun deleteWallet(userId: String, wallet: Wallet) = viewModelScope.launch{

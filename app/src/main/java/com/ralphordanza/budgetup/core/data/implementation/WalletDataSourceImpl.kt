@@ -7,6 +7,7 @@ import com.ralphordanza.budgetup.core.domain.model.*
 import com.ralphordanza.budgetup.core.domain.model.Resource.Companion.DEFAULT_ERROR_MESSAGE
 import com.ralphordanza.budgetup.core.domain.network.WalletDto
 import com.ralphordanza.budgetup.core.domain.network.WalletDtoMapper
+import com.ralphordanza.budgetup.framework.utils.Constants.EXPENSE
 import com.ralphordanza.budgetup.framework.utils.Constants.INCOME
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -97,6 +98,70 @@ class WalletDataSourceImpl @Inject constructor(
                 .collection("wallets")
                 .document(walletId)
                 .update("amount", updatedAmt)
+            Resource.success("Wallet amount updated!")
+        } catch (e: Exception) {
+            Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
+        }
+    }
+
+    override suspend fun updateWallet(
+        updatedAmt: String,
+        updatedName: String,
+        walletId: String,
+        userId: String
+    ): Resource<String> {
+        return try {
+            val walletData = firebaseFirestore.collection("users")
+                .document(userId)
+                .collection("wallets")
+                .document(walletId)
+                .get()
+                .await()
+            val prevAmt = walletData.get("amount") as String
+
+            var type = ""
+            var diff = 0.0
+            val finalAmt = when {
+                prevAmt.toDouble() > updatedAmt.toDouble() -> {
+                    type = EXPENSE
+                    diff = prevAmt.toDouble() - updatedAmt.toDouble()
+                    //THEN SUBTRACT THE DIFF TO PREVIOUS AMOUNT
+                    prevAmt.toDouble() - diff
+                }
+                prevAmt.toDouble() < updatedAmt.toDouble() -> {
+                    type = INCOME
+                    diff = updatedAmt.toDouble() - prevAmt.toDouble()
+                    //THEN ADD THE DIFF TO PREVIOUS AMOUNT
+                    prevAmt.toDouble() + diff
+                }
+                else -> {
+                    prevAmt.toDouble()
+                }
+            }
+
+            //ADD NEW TRANSACTION (ADJUSTED BALANCE)
+            val transaction = hashMapOf(
+                "amount" to diff.toString(),
+                "createdAt" to FieldValue.serverTimestamp(),
+                "note" to "Adjusted Balance",
+                "type" to type,
+                "userId" to userId,
+                "walletId" to  walletData.id
+            )
+            firebaseFirestore.collection("transactions")
+                .add(transaction)
+
+            //UPDATE WALLET
+            val wallet = hashMapOf(
+                "name" to updatedName,
+                "amount" to updatedAmt,
+                "createdAt" to FieldValue.serverTimestamp()
+            )
+            firebaseFirestore.collection("users")
+                .document(userId)
+                .collection("wallets")
+                .document(walletId)
+                .set(wallet)
             Resource.success("Wallet amount updated!")
         } catch (e: Exception) {
             Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)

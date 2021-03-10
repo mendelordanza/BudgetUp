@@ -73,7 +73,11 @@ class HomeFragment : Fragment() {
         }, { type, wallet ->
             when (type) {
                 0 -> { //Edit
-
+                    walletViewModel.getUserId().observe(viewLifecycleOwner, Observer { userId ->
+                        if (userId.isNotEmpty()) {
+                            walletViewModel.updateWallet("20000", "BDOUPDATED", wallet.id, userId)
+                        }
+                    })
                 }
                 1 -> { //Delete
                     walletViewModel.getUserId().observe(viewLifecycleOwner, Observer { userId ->

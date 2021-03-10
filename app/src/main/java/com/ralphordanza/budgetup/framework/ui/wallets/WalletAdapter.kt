@@ -42,7 +42,7 @@ class WalletAdapter(
             menuInfo: ContextMenu.ContextMenuInfo?
         ) {
             val edit = menu?.add(Menu.NONE, 0, 0, "Edit")
-            val delete =menu?.add(Menu.NONE, 1, 0, "Delete")
+            val delete = menu?.add(Menu.NONE, 1, 0, "Delete")
             edit?.setOnMenuItemClickListener(onMenuClick)
             delete?.setOnMenuItemClickListener(onMenuClick)
         }

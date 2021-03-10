@@ -89,6 +89,11 @@ object DataModule {
     }
 
     @Provides
+    fun provideUpdateWallet(walletRepository: WalletRepository) : UpdateWallet {
+        return UpdateWallet(walletRepository)
+    }
+
+    @Provides
     fun provideInteractors(
         registerUser: RegisterUser,
         saveToFirestore: SaveToFirestore,
@@ -99,11 +104,12 @@ object DataModule {
         getTotal: GetTotal,
         addWallet: AddWallet,
         deleteWallet: DeleteWallet,
+        updateWalletAmount: UpdateWalletAmount,
+        updateWallet: UpdateWallet,
         calculatorCompute: CalculatorCompute,
         addTransaction: AddTransaction,
         getTransactions: GetTransactions,
         getTotalTransactions: GetTotalTransactions,
-        updateWalletAmount: UpdateWalletAmount,
         deleteTransaction: DeleteTransaction
     ) : Interactors {
         return Interactors(
@@ -117,6 +123,7 @@ object DataModule {
             addWallet,
             deleteWallet,
             updateWalletAmount,
+            updateWallet,
             calculatorCompute,
             addTransaction,
             getTransactions,

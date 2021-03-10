@@ -18,5 +18,8 @@ class WalletRepository @Inject constructor(private val walletDataSource: WalletD
     suspend fun updateWalletAmount(updatedAmt: String, walletId: String, userId: String) =
         walletDataSource.updateWalletAmount(updatedAmt, walletId, userId)
 
+    suspend fun updateWallet(updatedAmt: String, updatedName: String, walletId: String, userId: String) =
+        walletDataSource.updateWallet(updatedAmt, updatedName, walletId, userId)
+
     suspend fun deleteWallet(userId: String, wallet: Wallet) = walletDataSource.deleteWallet(userId, wallet)
 }
