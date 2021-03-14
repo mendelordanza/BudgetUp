@@ -98,7 +98,7 @@ class TransactionsFragment : Fragment() {
         viewModel.getTotalTransactions().observe(viewLifecycleOwner, Observer {
             binding.txtAmount.text = it.getDecimalString()
             if (it != 0.0) {
-                walletViewModel.updateWalletAmount(it.getDecimalString(), args.walletData.id, userId)
+                walletViewModel.updateWalletAmount(it.toString(), args.walletData.id, userId)
             }
         })
 
