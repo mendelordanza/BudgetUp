@@ -162,7 +162,7 @@ class WalletDataSourceImpl @Inject constructor(
                 .collection("wallets")
                 .document(walletId)
                 .set(wallet)
-            Resource.success("Wallet amount updated!")
+            Resource.success("Wallet updated")
         } catch (e: Exception) {
             Resource.error(e.localizedMessage ?: DEFAULT_ERROR_MESSAGE, null)
         }

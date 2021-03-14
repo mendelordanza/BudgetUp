@@ -40,6 +40,10 @@
         <action
             android:id="@+id/action_addWalletFragment_to_calculatorFragment"
             app:destination="@id/calculatorFragment" />
+        <argument
+            android:name="walletData"
+            app:argType="com.ralphordanza.budgetup.core.domain.model.Wallet"
+            app:nullable="true"/>
     </fragment>
     <fragment
         android:id="@+id/addTransactionFragment"

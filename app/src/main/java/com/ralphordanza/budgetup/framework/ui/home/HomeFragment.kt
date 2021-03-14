@@ -75,7 +75,8 @@ class HomeFragment : Fragment() {
                 0 -> { //Edit
                     walletViewModel.getUserId().observe(viewLifecycleOwner, Observer { userId ->
                         if (userId.isNotEmpty()) {
-                            walletViewModel.updateWallet("20000", "BDOUPDATED", wallet.id, userId)
+                            val action = HomeFragmentDirections.actionHomeFragmentToAddWalletFragment(wallet)
+                            findNavController().navigate(action)
                         }
                     })
                 }

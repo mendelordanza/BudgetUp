@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), SnackbarListener {
             when (destination.id) {
                 R.id.homeFragment -> {
                     binding.fab.setSafeOnClickListener {
-                        val action = HomeFragmentDirections.actionHomeFragmentToAddWalletFragment()
+                        val action = HomeFragmentDirections.actionHomeFragmentToAddWalletFragment(null)
                         navController.navigate(action)
                     }
                     hideToolbar()
