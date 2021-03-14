@@ -18,6 +18,7 @@ import com.ralphordanza.budgetup.core.domain.model.Status
 import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.FragmentAddWalletBinding
 import com.ralphordanza.budgetup.framework.extensions.hideKeyboard
+import com.ralphordanza.budgetup.framework.ui.MainActivity
 import com.ralphordanza.budgetup.framework.ui.customview.LoadingDialog
 import com.ralphordanza.budgetup.framework.ui.transactions.AMOUNT_KEY
 import com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragmentDirections
@@ -58,6 +59,7 @@ class AddWalletFragment : Fragment() {
             binding.etName.setText(wallet.name)
             binding.etAmount.setText(wallet.amount)
             binding.btnAdd.text = "Update"
+            (activity as MainActivity).supportActionBar?.title = "Update Wallet"
         } ?: run { //ELSE IF NULL
 
         }
