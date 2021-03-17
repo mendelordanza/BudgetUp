@@ -147,7 +147,7 @@ class AddTransactionFragment : Fragment() {
                             date = binding.etDate.text.toString(),
                             walletId = selectedWallet.id,
                             type = selectedType,
-                            note = binding.etNote.text.toString()
+                            note = binding.etNote.text.toString().ifEmpty { "${selectedWallet.name} Transaction" }
                         )
                     }
                 })

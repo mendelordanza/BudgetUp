@@ -82,7 +82,6 @@ class ItemTransactionAdapter(
                     onMenuClick(0, getItem(adapterPosition))
                 }
                 1 -> {
-                    Log.d("CHECK", "id: ${getItem(adapterPosition).id}")
                     onMenuClick(1, getItem(adapterPosition))
                 }
             }

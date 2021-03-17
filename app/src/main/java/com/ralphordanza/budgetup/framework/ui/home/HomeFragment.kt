@@ -2,6 +2,7 @@ package com.ralphordanza.budgetup.framework.ui.home
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,6 +18,7 @@ import com.ralphordanza.budgetup.framework.utils.SnackbarListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import splitties.toast.toast
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -110,16 +112,18 @@ class HomeFragment : Fragment() {
                     is WalletViewModel.WalletEvent.WalletDeleteEvent -> {
                         when (event.resource.status) {
                             Status.LOADING -> {
-
+                                binding.progressBar.isVisible = true
                             }
                             Status.SUCCESS -> {
+                                binding.progressBar.isVisible = false
                                 event.resource.data?.let {
                                     (activity as SnackbarListener).onWalletChange(it)
                                     loadWallets()
                                 }
                             }
                             Status.ERROR -> {
-
+                                binding.progressBar.isVisible = false
+                                toast(event.resource.message.toString())
                             }
                         }
                     }

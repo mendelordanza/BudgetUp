@@ -47,27 +47,16 @@
 
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/txt_year"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="2020"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cv_amount" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_grouped_transactions"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="85dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txt_year" />
+            app:layout_constraintTop_toBottomOf="@id/cv_amount" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
