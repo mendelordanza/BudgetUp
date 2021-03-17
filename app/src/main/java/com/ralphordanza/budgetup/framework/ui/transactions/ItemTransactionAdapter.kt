@@ -70,17 +70,12 @@ class ItemTransactionAdapter(
             v: View?,
             menuInfo: ContextMenu.ContextMenuInfo?
         ) {
-            val edit = menu?.add(Menu.NONE, 0, 0, "Edit")
             val delete = menu?.add(Menu.NONE, 1, 0, "Delete")
-            edit?.setOnMenuItemClickListener(onMenuClick)
             delete?.setOnMenuItemClickListener(onMenuClick)
         }
 
         val onMenuClick = MenuItem.OnMenuItemClickListener {
             when (it.itemId) {
-                0 -> {
-                    onMenuClick(0, getItem(adapterPosition))
-                }
                 1 -> {
                     onMenuClick(1, getItem(adapterPosition))
                 }

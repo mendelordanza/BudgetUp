@@ -2,24 +2,19 @@ package com.ralphordanza.budgetup.framework.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.animation.DecelerateInterpolator
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.NavArgument
 import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.navigation.navArgs
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.afollestad.materialdialogs.customview.customView
 import com.ralphordanza.budgetup.R
 import com.ralphordanza.budgetup.core.domain.model.Status
-import com.ralphordanza.budgetup.core.domain.model.Wallet
 import com.ralphordanza.budgetup.databinding.ActivityMainBinding
 import com.ralphordanza.budgetup.framework.extensions.setSafeOnClickListener
 import com.ralphordanza.budgetup.framework.extensions.snackbar
@@ -28,10 +23,6 @@ import com.ralphordanza.budgetup.framework.ui.login.LoginViewModel
 import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.home.HomeFragmentDirections
 import com.ralphordanza.budgetup.framework.ui.login.LoginActivity
-import com.ralphordanza.budgetup.framework.ui.transactions.AddTransactionFragment
-import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragment
-import com.ralphordanza.budgetup.framework.ui.transactions.TransactionsFragmentArgs
-import com.ralphordanza.budgetup.framework.ui.wallets.AddWalletFragment
 import com.ralphordanza.budgetup.framework.utils.SnackbarListener
 import dagger.hilt.android.AndroidEntryPoint
 import splitties.activities.start
@@ -140,6 +131,20 @@ class MainActivity : AppCompatActivity(), SnackbarListener {
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.sort -> {
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setResultFromCalculator() {
